@@ -1,0 +1,107 @@
+<tool id="SailfishConvertAndMergeColumnForDEG" name="SailfishConvertAndMergeColumnForDEG" version="0.01">
+<description>column trimming, merge, and value convert to integer from sailfish</description>
+
+<command interpreter="python">
+
+        SailfishConvertAndMergeColumnForDEG.py --script_path "$runMe" --interpreter "python" 
+            --tool_name "SailfishConvertAndMergeColumnForDEG" --input_tab "$input1"   --output_dir "./" --output_tab "$tab_file" 
+</command>
+<inputs>
+<param name="input1"  type="data" format="tabular" label="Select a suitable input file from your history"/> 
+<param name="job_name" type="text" label="Supply a name for the outputs to remind you what they contain" value="SailfishConvertAndMergeColumnForDEG"/> 
+
+</inputs>
+<outputs>
+ <data format="tabular" name="tab_file" label="${job_name}"/>
+
+</outputs>
+<configfiles>
+<configfile name="runMe">
+# -*- coding: utf-8 -*-
+import sys
+import os
+import shutil
+import glob
+
+print "python :" + sys.version
+import dateutil.tz
+import pandas as pd
+
+print u"Sailfish_ConvertAndMergeColumnForDEG.py Started......"
+
+inp = sys.argv[1]
+outp = sys.argv[2]
+print u"inp: " + inp
+print u"outp: " + outp
+
+def makeDataframe(fname):
+    dataf = pd.read_table(fname, delimiter='\t', skiprows=4)
+    pref = os.path.basename(fname) + "_"
+    dataf.rename(columns=(lambda x: pref + x if "Transcript" not in x else x), inplace=True)
+    return dataf
+
+def dataout(data, filename):
+    data.to_csv(filename, sep="\t", index=False)
+
+def main():
+    out_list = pd.read_csv(inp, delimiter='\t')
+    print out_list.head(10)
+    path_list = out_list['file_name']
+    print path_list.head(10)
+
+    df_list = [makeDataframe(fname) for fname in path_list]
+    print(str(len(df_list)) + ' files convert to dataframe.')
+    print df_list[0].head(10)
+
+    chk_colname = [len(list(set([y.find("EstimatedNumReads") for y in list(x.columns.values)]))) for x in df_list]
+    print chk_colname
+
+    if 1 in chk_colname:
+        print 'This dataset not Sailfish output format.'
+    else:
+        m_df = pd.DataFrame(columns=['# Transcript'])
+        for df in df_list:
+            cols = [x for x in df.columns if "Transcript" in x or "EstimatedNumReads" in x]
+            df.ix[:,filter(lambda x: "EstimatedNumReads" in x, cols)].astype(int)
+            m_df = pd.merge(m_df, df[cols], on='# Transcript', how='outer', suffixes=['',''])
+
+        m_df.ix[:,1:] = m_df.ix[:,1:].astype(int)
+        m_df = m_df.reindex_axis(sorted(m_df.columns), axis=1)
+        m_df = m_df.rename(columns={'# Transcript' : 'target_id'})
+        print m_df.head(10)
+        dataout(m_df, outp)
+
+if __name__ == '__main__':
+        main()
+</configfile>
+</configfiles>
+
+
+        <tests>
+        <test>
+        <param name="input1" value="SailfishConvertAndMergeColumnForDEG_test1_input.xls" ftype="tabular"/>
+        <param name="job_name" value="test1"/>
+        <param name="runMe" value="$runMe"/>
+        <output name="tab_file" file="SailfishConvertAndMergeColumnForDEG_test1_output.xls" ftype="tabular"/>
+        </test>
+        </tests>
+        
+
+<help>
+
+This Tool trimming, merge, and value convert to integer from Sailfish count-data for DEG.
+
+**Attribution**
+This Galaxy tool was created by mika.yoshimura@riken.jp at 02/02/2015 15:45:05
+using the Galaxy Tool Factory.
+
+See https://bitbucket.org/fubar/galaxytoolfactory for details of that project
+Please cite: Creating re-usable tools from scripts: The Galaxy Tool Factory. Ross Lazarus; Antony Kaspi; Mark Ziemann; The Galaxy Team. 
+Bioinformatics 2012; doi: 10.1093/bioinformatics/bts573
+
+</help>
+<citations>
+    
+    <citation type="doi">10.1093/bioinformatics/bts573</citation>
+</citations>
+</tool>
