@@ -1054,6 +1054,7 @@ master = True
 logto = /home/galaxy/uwsgi.log
 logdate = True
 pythonpath = lib
+buffer-size = 32768
 
 [server:handler0]
 use = egg:Paste#http
