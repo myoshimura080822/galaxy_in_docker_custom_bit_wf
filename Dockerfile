@@ -38,6 +38,12 @@ ADD ./bit-tools_install_docker.py /galaxy/bit-tools_install_docker.py
 RUN python /galaxy/bit-tools_install_docker.py && \
     cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
 
+# Install Custom Bit-Tools
+WORKDIR /galaxy
+ADD ./for-hiseq-tools_install_docker.py /galaxy/for-hiseq-tools_install_docker.py
+RUN python /galaxy/for-hiseq-tools_install_docker.py && \
+    cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
+
 # replace migrate Bit-Tools file (for latest galaxy)
 ADD ./for_latest_GetDatasetDatPath.xml /galaxy-central/tools/galaxy-mytools_rnaseq/GetDatasetDatPath/GetDatasetDatPath.xml
 ADD ./for_latest_SailfishConvertAndMergeColumnForDEG.xml /galaxy-central/tools/galaxy-mytools_rnaseq/Sailfish_ConvertAndMergeColumnForDEG/SailfishConvertAndMergeColumnForDEG.xml
