@@ -34,9 +34,10 @@ outp = sys.argv[2]
 print u"inp: " + inp
 print u"outp: " + outp
 
-def makeDataframe(fname):
+def makeDataframe(fname,out_list):
     dataf = pd.read_table(fname, delimiter='\t', skiprows=4)
     pref = os.path.basename(fname) + "_"
+    pref = out_list[out_list.file_name == fname].iloc[0]['sample_name'] + "_"
     dataf.rename(columns=(lambda x: pref + x if "Transcript" not in x else x), inplace=True)
     return dataf
 
@@ -45,11 +46,11 @@ def dataout(data, filename):
 
 def main():
     out_list = pd.read_csv(inp, delimiter='\t')
-    print out_list.head(10)
+    #print out_list.head(10)
     path_list = out_list['file_name']
-    print path_list.head(10)
+    #print path_list.head(10)
 
-    df_list = [makeDataframe(fname) for fname in path_list]
+    df_list = [makeDataframe(fname, out_list) for fname in path_list]
     print(str(len(df_list)) + ' files convert to dataframe.')
     print df_list[0].head(10)
 
@@ -67,7 +68,8 @@ def main():
 
         m_df.ix[:,1:] = m_df.ix[:,1:].astype(int)
         m_df = m_df.reindex_axis(sorted(m_df.columns), axis=1)
-        m_df = m_df.rename(columns={'# Transcript' : 'target_id'})
+        m_df.rename(columns={'# Transcript' : 'target_id'})
+        m_df.rename(columns=lambda x: x.replace('_EstimatedNumReads', ''), inplace=True)
         print m_df.head(10)
         dataout(m_df, outp)
 

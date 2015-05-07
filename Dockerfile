@@ -4,6 +4,11 @@ FROM myoshimura080822/galaxy_in_docker_custom
 # Put my hand up as maintainer
 MAINTAINER Mika Yoshimura <myoshimura080822@gmail.com>
 
+#Install OS tools we'll need
+RUN \
+    apt-get -y update && \
+    apt-get -y install imagemagick
+
 # Replace modified galaxy.ini
 ADD ./galaxy.ini.docker_sample /galaxy-central/config/galaxy.ini
 
@@ -36,7 +41,7 @@ RUN python /galaxy/bit-tools_install_docker.py && \
 # replace migrate Bit-Tools file (for latest galaxy)
 ADD ./for_latest_GetDatasetDatPath.xml /galaxy-central/tools/galaxy-mytools_rnaseq/GetDatasetDatPath/GetDatasetDatPath.xml
 ADD ./for_latest_SailfishConvertAndMergeColumnForDEG.xml /galaxy-central/tools/galaxy-mytools_rnaseq/Sailfish_ConvertAndMergeColumnForDEG/SailfishConvertAndMergeColumnForDEG.xml
-ADD ./for_latest_eXpressConvertAndMergeDataForDEG.xml /galaxy-central/tools/galaxy-mytools_rnaseq/eXpressConvertAndMergeDataForDEG.xml
+ADD ./for_latest_eXpressConvertAndMergeDataForDEG.xml /galaxy-central/tools/galaxy-mytools_rnaseq/eXpress_ConvertAndMergeDataForDEG/eXpressConvertAndMergeDataForDEG.xml
 
 # Setting Sailfish-index
 WORKDIR /galaxy
