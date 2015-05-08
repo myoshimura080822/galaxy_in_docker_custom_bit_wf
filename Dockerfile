@@ -9,10 +9,17 @@ RUN \
     apt-get -y update && \
     apt-get -y install imagemagick
 
+#Install additional R Pkg
+WORKDIR /galaxy
+ADD ./install_additional.R /galaxy/install_additional.R
+RUN R -e 'source("/galaxy/install_additional.R")'
+
 # Replace modified galaxy.ini
+WORKDIR /galaxy-central
 ADD ./galaxy.ini.docker_sample /galaxy-central/config/galaxy.ini
 
 # Make import_data dir
+WORKDIR /galaxy-central
 RUN mkdir /galaxy-central/config/import_data
 
 # Install Sailfish
