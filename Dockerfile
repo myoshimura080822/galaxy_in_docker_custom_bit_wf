@@ -7,7 +7,8 @@ MAINTAINER Mika Yoshimura <myoshimura080822@gmail.com>
 #Install OS tools we'll need
 RUN \
     apt-get -y update && \
-    apt-get -y install imagemagick
+    apt-get -y install imagemagick && \
+    apt-get -y install pandoc
 
 #Install additional R Pkg
 WORKDIR /galaxy
