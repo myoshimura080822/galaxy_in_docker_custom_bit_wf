@@ -8,7 +8,9 @@ MAINTAINER Mika Yoshimura <myoshimura080822@gmail.com>
 RUN \
     apt-get -y update && \
     apt-get -y install imagemagick && \
-    apt-get -y install pandoc
+    apt-get -y install pandoc && \
+    apt-get -y install libcurl4-gnutls-dev && \
+    apt-get -y install libglu1-mesa-dev freeglut3-dev mesa-common-dev
 
 #Install additional R Pkg
 WORKDIR /galaxy
@@ -21,7 +23,8 @@ ADD ./galaxy.ini.docker_sample /galaxy-central/config/galaxy.ini
 
 # Make import_data dir
 WORKDIR /galaxy-central
-RUN mkdir /galaxy-central/config/import_data
+RUN mkdir /galaxy-central/config/import_data && \
+    cd /galaxy-central/config/import_data;ln -s /data/ref_fasta;ln -s /data/quartz_div100;sudo ln -s /data/adapter_primer
 
 # Install Sailfish
 WORKDIR /galaxy
