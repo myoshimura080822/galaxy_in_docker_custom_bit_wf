@@ -9,6 +9,7 @@ import subprocess
 
 dist_dname = '/galaxy-central/config'
 wf_dname = dist_dname + '/workflow_file'
+repo_name = 'galaxy-workflow_pre_analysis'
 
 GALAXY_URL = 'http://localhost:8080/'
 conf = SafeConfigParser()
@@ -45,19 +46,19 @@ def main():
         print wf_namelist
         print ':::::::::::::::::::::::::::::::::::::::::::'
         print '>>>>>>>>>>>>>>>>> clone BiT Workflows from github...'
-        if not os.path.exists(wf_dname + '/galaxy-workflow_rnaseq'):
+        if not os.path.exists(wf_dname + '/' + repo_name):
             makeDir(wf_dname)
             os.chdir(wf_dname)
-            git_url = 'https://github.com/myoshimura080822/galaxy-workflow_rnaseq.git'
-            Repo.clone_from(git_url, 'galaxy-workflow_rnaseq')
+            git_url = 'https://github.com/myoshimura080822/' + repo_name + '.git'
+            Repo.clone_from(git_url, repo_name)
         else:
-            print 'BiT Workflow already cloned. To update, Please delete, move or rename "/galaxy-workflow_rnaseq" before script execute.'
+            print repo_name + ' already cloned. To update, Please delete, move or rename dir before this script execute.'
             return 0
 
         print ':::::::::::::::::::::::::::::::::::::::::::'
         print '>>>>>>>>>>>>>>>>> delete and inport workflow files...'
 
-        mytoolsdir = wf_dname + '/galaxy-workflow_rnaseq/'
+        mytoolsdir = wf_dname + '/' + repo_name + '/'
         clone_wf_list = [file.replace(mytoolsdir, "") for file in get_all_ga(mytoolsdir)]
         print clone_wf_list
         delete_itm =[]
