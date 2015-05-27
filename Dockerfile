@@ -21,6 +21,10 @@ RUN R -e 'source("/galaxy/install_additional.R")'
 WORKDIR /galaxy-central
 ADD ./galaxy.ini.docker_sample /galaxy-central/config/galaxy.ini
 
+# Replace modified job_conf.xml
+WORKDIR /galaxy-central
+ADD ./job_conf.xml.docker_sample /galaxy-central/config/job_conf.xml
+
 # Make import_data dir
 WORKDIR /galaxy-central
 RUN mkdir /galaxy-central/config/import_data && \
