@@ -28,7 +28,7 @@ ADD ./job_conf.xml.docker_sample /galaxy-central/config/job_conf.xml
 # Make import_data dir
 WORKDIR /galaxy-central
 RUN mkdir /galaxy-central/config/import_data && \
-    cd /galaxy-central/config/import_data;ln -s /data/ref_fasta;ln -s /data/quartz_div100;sudo ln -s /data/adapter_primer
+    cd /galaxy-central/config/import_data;ln -s /data/ref_fasta;ln -s /data/adapter_primer
 
 # Install Sailfish
 WORKDIR /galaxy
@@ -79,6 +79,10 @@ RUN sh /galaxy-central/bit-workflow_install_docker.sh
 
 # Mark folders as imported from the host.
 VOLUME ["/export/", "/data/", "/var/lib/docker"]
+
+# modified postgresql.conf
+ENV PGPORT 15432
+ENV GALAXY_CONFIG_DATABASE_CONNECTION postgresql://galaxy:galaxy@localhost:15432/galaxy
 
 # Expose port 80 (webserver), 21 (FTP server), 8800 (Proxy)
 EXPOSE :80

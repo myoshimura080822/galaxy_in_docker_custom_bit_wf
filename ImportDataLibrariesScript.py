@@ -31,10 +31,12 @@ if not import_dir.endswith('/'):
     import_dir = import_dir + '/'
     print import_dir
 
+hostname = os.uname()[1]
+
 print "whoami : " + pwd.getpwuid(os.getuid())[0]
 print "pwd : " + os.getcwd()
 
-url = "http://hal012.ad62.riken.go.jp:10880"
+url = "http://" + hostname + ":10880"
 admin_email = os.environ.get('GALAXY_DEFAULT_ADMIN_USER', 'admin@galaxy.org')
 admin_pass = os.environ.get('GALAXY_DEFAULT_ADMIN_PASSWORD', 'admin')
 gi = galaxy.GalaxyInstance(url=url, email=admin_email, password=admin_pass)
