@@ -14,7 +14,7 @@ import collections
 import traceback
 
 datetime = datetime.datetime.today().strftime("%Y%m%d%H%M")
-sys.stdout = open(datetime + ".log","w")
+#sys.stdout = open(datetime + ".log","w")
 
 print u"ImportDataLibrariesScript.py Started......"
 
@@ -30,6 +30,11 @@ print import_dir
 if not import_dir.endswith('/'):
     import_dir = import_dir + '/'
     print import_dir
+
+pardir = os.path.abspath(os.path.join(import_dir, os.pardir))
+if not "/data" in pardir:
+    pardir = os.path.abspath(os.path.join(pardir, os.pardir))
+print "pardir : " + pardir
 
 hostname = os.uname()[1]
 
@@ -102,8 +107,10 @@ def create_pair_path(root_dir):
         return ""
 
     keys_list = path_list.keys()
+    #print keys_list
     lane_01 = list(path_list[keys_list[0]])
     lane_01.sort()
+    #print lane_01
     print len(lane_01)
     lane_02 = list(path_list[keys_list[1]])
     lane_02.sort()
@@ -196,15 +203,15 @@ def main():
     	lib_name = import_dir.split('/')[-2]
         new_lib_id = create_datalib(lib_name + "_" + datetime)
         
-        ret_file_list = ret_file_list.replace('/home/myoshimura/galaxy_userdata/bit_testdata', '/data')
+        ret_file_list = ret_file_list.replace(pardir, '/data')
     	print ret_file_list
         import_data(new_lib_id, ret_file_list)
 
     	print ':::::::::::::::::::::::::::::::::::::::::::'
         print '>>>>>>>>>>>>>>>>> end of script'
 
-        sys.stdout.close()
-        sys.stdout = sys.__stdout__
+        #sys.stdout.close()
+        #sys.stdout = sys.__stdout__
         return 0
     except:
     	info = sys.exc_info()
