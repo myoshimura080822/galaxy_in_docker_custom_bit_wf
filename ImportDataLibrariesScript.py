@@ -21,27 +21,20 @@ print u"ImportDataLibrariesScript.py Started......"
 argvs = sys.argv
 argc = len(argvs)
 
-if (argc != 2):
-    print 'Usage: # python %s fastq-dir-name' % argvs[0]
+if (argc != 4):
+    print 'Usage: # python %s fastq-dirname(can parent-dir) docker-mount-dir port-no' % argvs[0]
     quit()
 
 import_dir = argvs[1]
-print import_dir
-if not import_dir.endswith('/'):
-    import_dir = import_dir + '/'
-    print import_dir
-
-pardir = os.path.abspath(os.path.join(import_dir, os.pardir))
-if not "/data" in pardir:
-    pardir = os.path.abspath(os.path.join(pardir, os.pardir))
-print "pardir : " + pardir
+mount_dir = argvs[2]
+port_no = argvs[3]
 
 hostname = os.uname()[1]
 
 print "whoami : " + pwd.getpwuid(os.getuid())[0]
 print "pwd : " + os.getcwd()
 
-url = "http://" + hostname + ":10880"
+url = "http://" + hostname + ":" + port_no
 admin_email = os.environ.get('GALAXY_DEFAULT_ADMIN_USER', 'admin@galaxy.org')
 admin_pass = os.environ.get('GALAXY_DEFAULT_ADMIN_PASSWORD', 'admin')
 gi = galaxy.GalaxyInstance(url=url, email=admin_email, password=admin_pass)
@@ -189,22 +182,36 @@ def makeDir(dname):
 def main():
     try:
     	if os.path.exists(import_dir) is False:
-        	raise Exception, import_dir + ' is not found.'
+            raise Exception, import_dir + ' is not found.'
+    	if os.path.exists(mount_dir) is False:
+            raise Exception, mount_dir + ' is not found.'
     
-    	pair_filepath = create_pair_path(import_dir)
+	if not import_dir.endswith('/'):
+            import_d = import_dir + '/'
+    	    print import_d
+	else:
+	    import_d = import_dir
+
+#	if not mount_dir.endswith('/'):
+#            mount_d = mount_dir + '/'
+#    	    print mount_d
+    	
+	pair_filepath = create_pair_path(import_d)
 
     	if not pair_filepath == "":
-    	    output_dir = import_dir + "merged_fastq_" + datetime + "/"
+    	    output_dir = import_d + "merged_fastq_" + datetime + "/"
     	    makeDir(output_dir)
     	    ret_file_list = merge_pair_fastq(pair_filepath, output_dir)
     	else:
-    	    ret_file_list = get_import_files(import_dir)
+    	    ret_file_list = get_import_files(import_d)
     	
-    	lib_name = import_dir.split('/')[-2]
+        ret_file_list = ret_file_list.replace(os.path.abspath(mount_dir), '/data')
+    	print ret_file_list
+    	
+	# Create DataLibrary 
+	lib_name = import_dir.split('/')[-2]
         new_lib_id = create_datalib(lib_name + "_" + datetime)
         
-        ret_file_list = ret_file_list.replace(pardir, '/data')
-    	print ret_file_list
         import_data(new_lib_id, ret_file_list)
 
     	print ':::::::::::::::::::::::::::::::::::::::::::'
