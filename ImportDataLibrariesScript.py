@@ -21,13 +21,14 @@ print u"ImportDataLibrariesScript.py Started......"
 argvs = sys.argv
 argc = len(argvs)
 
-if (argc != 4):
-    print 'Usage: # python %s fastq-dirname(can parent-dir) docker-mount-dir port-no' % argvs[0]
+if (argc != 5):
+    print 'Usage: # python %s fastq-dirname(can parent-dir) docker-mount-dir port-no filetype' % argvs[0]
     quit()
 
 import_dir = argvs[1]
 mount_dir = argvs[2]
 port_no = argvs[3]
+file_type = argvs[4]
 
 hostname = os.uname()[1]
 
@@ -140,7 +141,7 @@ def merge_pair_fastq(list, outdir):
 
 def get_import_files(dir_name):
     for root, dirs, files in os.walk(dir_name):
-        file_list = '\n'.join( [ os.path.join(root, filename) for filename in files if '.fastq' in filename] )
+        file_list = '\n'.join( [ os.path.join(root, filename) for filename in files if "." + file_type == os.path.splitext(filename)[1]] )
     return file_list
 
 class ScriptRunningError(Exception):
@@ -205,11 +206,15 @@ def main():
     	else:
     	    ret_file_list = get_import_files(import_d)
     	
-        ret_file_list = ret_file_list.replace(os.path.abspath(mount_dir), '/data')
+        
+	if len(ret_file_list) == 0:
+	    raise Exception, 'import files is not found.'
+	
+	ret_file_list = ret_file_list.replace(os.path.abspath(mount_dir), '/data')
     	print ret_file_list
     	
 	# Create DataLibrary 
-	lib_name = import_dir.split('/')[-2]
+	lib_name = import_dir.split('/')[-1]
         new_lib_id = create_datalib(lib_name + "_" + datetime)
         
         import_data(new_lib_id, ret_file_list)
