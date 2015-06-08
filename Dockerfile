@@ -14,16 +14,23 @@ RUN \
 
 #Install additional R Pkg
 WORKDIR /galaxy
-ADD ./install_additional.R /galaxy/install_additional.R
+ADD setup_scripts/install_additional.R /galaxy/install_additional.R
 RUN R -e 'source("/galaxy/install_additional.R")'
 
-# Replace modified galaxy.ini
+# Replace modefied setting files
 WORKDIR /galaxy-central
 ADD ./galaxy.ini.docker_sample /galaxy-central/config/galaxy.ini
-
-# Replace modified job_conf.xml
-WORKDIR /galaxy-central
 ADD ./job_conf.xml.docker_sample /galaxy-central/config/job_conf.xml
+ADD ./datatypes_conf.xml.docker_sample /galaxy-central/config/datatypes_conf.xml
+
+# Replace modefied lib files
+WORKDIR /galaxy-central
+RUN mv /galaxy-central/lib/galaxy/datatypes/data.py /galaxy-central/lib/galaxy/datatypes/data.py_bk && \
+    mv /galaxy-central/lib/galaxy/datatypes/sniff.py /galaxy-central/lib/galaxy/datatypes/sniff.py_bk && \
+    mv /galaxy-central/tools/data_source/upload.py /galaxy-central/tools/data_source/upload.py_bk
+ADD galaxy_lib/data.py /galaxy-central/lib/galaxy/datatypes/data.py
+ADD galaxy_lib/sniff.py /galaxy-central/lib/galaxy/datatypes/sniff.py
+ADD galaxy_lib/upload.py /galaxy-central/tools/data_source/upload.py
 
 # Make import_data dir
 WORKDIR /galaxy-central
@@ -49,32 +56,32 @@ RUN git clone https://github.com/myoshimura080822/galaxy-mytools_ToolFactory.git
 
 # Install Custom Bit-Tools
 WORKDIR /galaxy
-ADD ./bit-tools_install_docker.py /galaxy/bit-tools_install_docker.py
+ADD setup_scripts/bit-tools_install_docker.py /galaxy/bit-tools_install_docker.py
 RUN python /galaxy/bit-tools_install_docker.py && \
     cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
 
-# Install Custom Bit-Tools
+# Install custom for docker-tools
 WORKDIR /galaxy
-ADD ./for-hiseq-tools_install_docker.py /galaxy/for-hiseq-tools_install_docker.py
+ADD setup_scripts/for-hiseq-tools_install_docker.py /galaxy/for-hiseq-tools_install_docker.py
 RUN python /galaxy/for-hiseq-tools_install_docker.py && \
     cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
 
 # replace migrate Bit-Tools file (for latest galaxy)
-ADD ./for_latest_GetDatasetDatPath.xml /galaxy-central/tools/galaxy-mytools_rnaseq/GetDatasetDatPath/GetDatasetDatPath.xml
-ADD ./for_latest_SailfishConvertAndMergeColumnForDEG.xml /galaxy-central/tools/galaxy-mytools_rnaseq/Sailfish_ConvertAndMergeColumnForDEG/SailfishConvertAndMergeColumnForDEG.xml
-ADD ./for_latest_eXpressConvertAndMergeDataForDEG.xml /galaxy-central/tools/galaxy-mytools_rnaseq/eXpress_ConvertAndMergeDataForDEG/eXpressConvertAndMergeDataForDEG.xml
+ADD modefied_tools/for_latest_GetDatasetDatPath.xml /galaxy-central/tools/galaxy-mytools_rnaseq/GetDatasetDatPath/GetDatasetDatPath.xml
+ADD modefied_tools/for_latest_SailfishConvertAndMergeColumnForDEG.xml /galaxy-central/tools/galaxy-mytools_rnaseq/Sailfish_ConvertAndMergeColumnForDEG/SailfishConvertAndMergeColumnForDEG.xml
+ADD modefied_tools/for_latest_eXpressConvertAndMergeDataForDEG.xml /galaxy-central/tools/galaxy-mytools_rnaseq/eXpress_ConvertAndMergeDataForDEG/eXpressConvertAndMergeDataForDEG.xml
 
 # Setting Sailfish-index
 WORKDIR /galaxy
-ADD ./setting_sailfish_index.py /galaxy/setting_sailfish_index.py
-ADD ./index_file_list.txt /galaxy/index_file_list.txt
+ADD setup_scripts/setting_sailfish_index.py /galaxy/setting_sailfish_index.py
+ADD setup_scripts/index_file_list.txt /galaxy/index_file_list.txt
 RUN cp -a /galaxy-central/config/tool_data_table_conf.xml.sample /galaxy-central/config/tool_data_table_conf.xml && \
     python /galaxy/setting_sailfish_index.py index_file_list.txt
 
 # Import Bit-woorkflow to admin-user
 WORKDIR /galaxy-central
-ADD ./bit-workflow_install_docker.py /galaxy/bit-workflow_install_docker.py
-ADD ./bit-workflow_install_docker.sh /galaxy-central/bit-workflow_install_docker.sh
+ADD setup_scripts/bit-workflow_install_docker.py /galaxy/bit-workflow_install_docker.py
+ADD setup_scripts/bit-workflow_install_docker.sh /galaxy-central/bit-workflow_install_docker.sh
 RUN sh /galaxy-central/bit-workflow_install_docker.sh
 
 # Mark folders as imported from the host.
