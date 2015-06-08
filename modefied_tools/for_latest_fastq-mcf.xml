@@ -1,0 +1,233 @@
+<tool id="fastq_mcf" name="FastqMcf" version="1.0">
+  <description>sequence quality filtering and clipping</description>
+  <requirements>
+    <requirement type="package" version="1.1.2-484">ea-utils</requirement>
+  </requirements>
+  <version_string>fastq-mcf -V</version_string>
+  <command>fastq-mcf 
+    #if $trimming.choice == 'disable':
+      -0
+    #elif $trimming.choice == 'user_set':
+      #if len($trimming.scale.__str__) > 0
+        -s $trimming.scale
+      #end if
+      #if len($trimming.minpct.__str__) > 0
+        -t $trimming.minpct
+      #end if
+      #if len($trimming.nmin.__str__) > 0
+        -m $trimming.nmin
+      #end if
+      #if len($trimming.pctdiff.__str__) > 0
+        -p $trimming.pctdiff
+      #end if
+      #if len($trimming.nmax.__str__) > 0
+        -L $trimming.nmax
+      #end if
+      #if len($trimming.nkeep.__str__) > 0
+        -l $trimming.nkeep
+      #end if
+      #if len($trimming.skewpct.__str__) > 0
+        -k $trimming.skewpct
+      #end if
+      #if len($trimming.qthr.__str__) > 0
+        -q $trimming.qthr
+      #end if
+      #if len($trimming.qwin.__str__) > 0
+        -w $trimming.qwin
+      #end if
+      #if len($trimming.pctns.__str__) > 0
+        -x $trimming.pctns
+      #end if
+      #if len($trimming.sampcnt.__str__) > 0
+        -s $trimming.sampcnt
+      #end if
+      #if len($trimming.ilv3.__str__.strip()) > 0
+        -$trimming.ilv3
+      #end if
+      $trimming.rmns
+    #end if
+    #if $noclip == True :
+      $noclip
+    #else :
+      -o $reads_out
+      #if $mates.__str__ != 'None' :
+        -o $mates_out
+      #end if
+    #end if
+    $adpaters 
+    $reads
+    #if $mates.__str__ != 'None' :
+      $mates
+    #end if
+    > $log;
+    gzip -cf $reads_out > $reads_out2;
+    #if $mates.__str__ != 'None' :
+      gzip -cf $mates_out > $mates_out2
+    #end if
+  </command>
+  <inputs>
+    <param name="adpaters" type="data" format="fasta" label="A fasta formatted adapter list" />
+    <param name="reads" type="data" format="fastqsanger,fastqillumina,fastq.gz" label="Reads: single or Left-hand of Paired End Reads" />
+    <param name="mates" type="data" format="fastqsanger,fastqillumina,fastq.gz" optional="true" label="Right-hand mates for Paired End Reads" />
+    <!--
+ -s N.N Log scale for clip pct to threshold (2.5)
+ -t N % occurance threshold before clipping (0.25)
+ -m N Minimum clip length, overrides scaled auto (1)
+ -p N Maximum adapter difference percentage (20)
+ -l N Minimum remaining sequence length (15)
+ -L N   Maximum sequence length (none)
+ -k N sKew percentage causing trimming (2)
+ -q N quality threshold causing trimming (10)
+ -f force output, even if not much will be done
+ -0     Set all trimming parameters to zero
+ -U|u   Force disable/enable illumina PF filtering
+ -P N phred-scale (64)
+ -x N 'N' (Bad read) percentage causing trimming (10)
+ -R      Don't remove N's from the fronts/ends of reads
+ -n Don't clip, just output what would be done
+ -C N   Number of reads to use for subsampling (200000)
+ -d     Output lots of random debugging stuff
+    -->
+
+
+    <conditional name="trimming">
+        <param name="choice" type="select" label="Trimming Options">
+           <option value="defaults">Use Defaults</option>
+           <option value="user_set">Set Values</option>
+           <option value="disable">Set all trimming parameters to zero</option>
+        </param>
+      <when value="defaults"/>
+      <when value="disable"/>
+      <when value="user_set">
+        <param name="sampcnt" type="integer" optional="true" label="-C Number of reads to use for subsampling (100000)"> 
+        </param>
+        <param name="scale" type="float" optional="true" label="-s N.N Log scale for clip pct to threshold (2.5)"> 
+        </param>
+        <param name="minpct" type="float" optional="true" label="-t % occurance threshold before clipping (0.25)"> 
+        </param>
+        <param name="nmin" type="integer" optional="true" label="-m Minimum clip length, overrides scaled auto (1)"> 
+        </param>
+        <param name="pctdiff" type="integer" optional="true" label="-p Maximum adapter difference percentage (20)"> 
+        </param>
+
+        <param name="nmax" type="integer" optional="true" label="-L Maximum sequence length (none)"> 
+        </param>
+        <param name="nkeep" type="integer" optional="true" label="-l  Minimum remaining sequence length (15)"> 
+        </param>
+        <param name="skewpct" type="float" optional="true" label="-k sKew percentage causing trimming (2)"> 
+        </param>
+        <param name="qthr" type="integer" optional="true" label="-q quality threshold causing trimming (7)" 
+               help="remove end of-read with quality &lt; threshold"> 
+        </param>
+        <param name="qwin" type="integer" optional="true" label="-w mean quality threshold causing trimming (1)" 
+               help="remove end of read with mean quality &lt; threshold"> 
+        </param>
+        <param name="pctns" type="float" optional="true" label="-x  'N' (Bad read) percentage causing trimming (10)"> 
+        </param>
+        <param name="rmns" type="boolean" truevalue="-R" falsevalue="" checked="false" label="-R Don't remove N's from the fronts/ends of reads"/>
+        <param name="ilv3" type="select" label="illumina PF filtering">
+           <option value="">Default</option>
+           <option value="U">Disable illumina PF filtering</option>
+           <option value="u">Enable illumina PF filtering</option>
+        </param>
+      </when>
+    </conditional>
+
+    
+    <param name="phred" type="integer" optional="true" label="-P phred-scale (64)" help="Default is to determine automatically"> 
+    </param>
+
+    <param name="noclip" type="boolean" truevalue="-n" falsevalue="" checked="false" label="-n Don't clip, just output what would be done"/>
+
+  </inputs>
+  <outputs>
+    <data name="log"   format="txt" label="${tool.name} on ${on_string}: log"/>
+    <data name="reads_out"   format="fastqsanger" label="${tool.name} on ${on_string}: reads">
+      <filter>noclip == False</filter>
+    </data>
+    <data name="reads_out2"   format_source="reads" label="${tool.name} on ${on_string}: reads.gz"/>
+    <data name="mates_out" format="fastqsanger" label="${tool.name} on ${on_string}: mates">
+      <filter>(noclip == False and mates != None)</filter>
+    </data>
+    <data name="mates_out2" format_source="mates" label="${tool.name} on ${on_string}: mates.gz">
+      <filter>(noclip == False and mates != None)</filter>
+    </data>
+  </outputs>
+  <stdio>
+    <exit_code range="1:"  level="fatal"   description="Error" />
+  </stdio>
+  <tests>
+    <test>
+      <param name="adpaters" ftype="fasta" value="adapters.fa" />
+      <param name="reads" ftype="fastqillumina" value="test_mcf_reads.fq" />
+      <param name="mates" ftype="fastqillumina" value="test_mcf_mates.fq" />
+      <param name="choice" value="user_set" />
+      <param name="nkeep" value="16" />
+      <param name="qthr" value="15" />
+      <param name="qwin" value="5" />
+      <param name="pctns" value="10" />
+      <param name="ilv3" value="u" />
+      <param name="phred" value="33" />
+      <output name="reads_out" file="testout_mcf_reads.fq" />
+      <output name="mates_out" file="testout_mcf_mates.fq" />
+    </test>
+  </tests>
+  <help>
+**What it does**
+
+fastq-mcf_ attempts to:
+
+  Detect and remove sequencing adapters and primers
+  Detect limited skewing at the ends of reads and clip
+  Detect poor quality at the ends of reads and clip
+  Detect N's, and remove from ends
+  Remove reads with CASAVA 'Y' flag (purity filtering)
+  Discard sequences that are too short after all of the above
+
+
+  Keep multiple mate-reads in sync while doing all of the above
+
+.. _fastq-mcf: http://code.google.com/p/ea-utils/wiki/FastqMcf
+-----
+
+**Input**
+
+Fasta file of adapter sequences, for example::
+
+    > Genomic_DNA_oligonucleotide_sequences_Adapters_F
+    GATCGGAAGAGCTCGTATGCCGTCTTCTGCTTG
+    > Genomic_DNA_oligonucleotide_sequences_Adapters_R
+    ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+    > Genomic_DNA_Sequencing_Primer
+    ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+
+
+
+Reads or Left-hand mates, for example::
+
+    @1539:931/1
+    ACTTCCCGCGCGTGAAGGCGCCGGCAAACGAGGCTCGGGAAGGGGCTCCCG
+    +1539:931/1
+    BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+
+Right-hand mates, for example::
+
+    @1539:931/2
+    CGCCATTCCGAATCGTAGTTGTCGGCGTCTTCCAGTGCGGCAAGGCATCGT
+    +1539:931/2
+    WNUUZ\P^`BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+
+-----
+
+**Output**
+
+A log file
+
+A trimmed fastq of the reads
+
+A trimmed fastq of the mates
+
+
+
+  </help>
+</tool>
