@@ -39,13 +39,8 @@
                         -l \"T=PE:O=><:S=U\"
                     #end if
                 #end if
-                #if ".gz" in $single_or_paired.input_mate1:
-                    -1 <(gunzip -c $single_or_paired.input_mate1)
-                    -2 <(gunzip -c $single_or_paired.input_mate2)
-                #else:
-                    -1 $single_or_paired.input_mate1
-                    -2 $single_or_paired.input_mate2
-                #end if
+                -1 <(gzip -dcf $single_or_paired.input_mate1)
+                -2 <(gzip -dcf $single_or_paired.input_mate2)
             #end if
          -o ./ " >> ./tmp_job.sh;
          chmod 755 ./tmp_job.sh;

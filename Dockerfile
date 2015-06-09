@@ -70,10 +70,11 @@ COPY modefied_tools/for_latest_fastq-mcf.xml /shed_tools/toolshed.g2.bx.psu.edu/
 COPY modefied_tools/for_latest_rgFastQC.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/devteam/fastqc/8c650f7f76e9/fastqc/rgFastQC.xml
 
 # Setting Sailfish-index
-COPY setup_scripts/setting_sailfish_index.py /galaxy/setting_sailfish_index.py
+COPY setup_scripts/setting_tools_index.py /galaxy/setting_tools_index.py
 COPY setup_scripts/index_file_list.txt /galaxy/index_file_list.txt
+COPY setup_scripts/index_file_list_bowtie2.txt /galaxy/index_file_list_bowtie2.txt
 RUN cp -a /galaxy-central/config/tool_data_table_conf.xml.sample /galaxy-central/config/tool_data_table_conf.xml && \
-    python /galaxy/setting_sailfish_index.py index_file_list.txt
+    python /galaxy/setting_tools_index.py index_file_list.txt index_file_list_bowtie2.txt
 
 # Import Bit-woorkflow to admin-user
 WORKDIR /galaxy-central
