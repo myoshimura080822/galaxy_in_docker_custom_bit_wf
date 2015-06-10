@@ -9,7 +9,7 @@ import subprocess
 
 dist_dname = '/galaxy-central/config'
 wf_dname = dist_dname + '/workflow_file'
-repo_name = 'galaxy-workflow_pre_analysis'
+repo_name = 'workflow_rnaseq_on_docker_galaxy'
 
 GALAXY_URL = 'http://localhost:8080/'
 conf = SafeConfigParser()

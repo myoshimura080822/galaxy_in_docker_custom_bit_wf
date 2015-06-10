@@ -57,26 +57,22 @@ RUN python /galaxy/bit-tools_install_docker.py && \
     cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
 
 # Install custom for docker-tools
-COPY setup_scripts/for-hiseq-tools_install_docker.py /galaxy/for-hiseq-tools_install_docker.py
-RUN python /galaxy/for-hiseq-tools_install_docker.py && \
-    cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
+#COPY setup_scripts/for-hiseq-tools_install_docker.py /galaxy/for-hiseq-tools_install_docker.py
+#RUN python /galaxy/for-hiseq-tools_install_docker.py && \
+#    cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
 
-# replace migrate Tools
-COPY modefied_tools/for_latest_GetDatasetDatPath.xml /galaxy-central/tools/galaxy-mytools_rnaseq/GetDatasetDatPath/GetDatasetDatPath.xml
-COPY modefied_tools/for_latest_SailfishConvertAndMergeColumnForDEG.xml /galaxy-central/tools/galaxy-mytools_rnaseq/Sailfish_ConvertAndMergeColumnForDEG/SailfishConvertAndMergeColumnForDEG.xml
-COPY modefied_tools/for_latest_eXpressConvertAndMergeDataForDEG.xml /galaxy-central/tools/galaxy-mytools_rnaseq/eXpress_ConvertAndMergeDataForDEG/eXpressConvertAndMergeDataForDEG.xml
-COPY modefied_tools/for_latest_Sailfish_custom.xml /galaxy-central/tools/galaxy-mytools_rnaseq/Sailfish_custom/Sailfish_custom.xml
+# replace migrate ToolSheds tools
 COPY modefied_tools/for_latest_fastq-mcf.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/jjohnson/fastq_mcf/b61f1466ce8f/fastq_mcf/fastq-mcf.xml
 COPY modefied_tools/for_latest_rgFastQC.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/devteam/fastqc/8c650f7f76e9/fastqc/rgFastQC.xml
 
-# Setting Sailfish-index
+# Setting Index
 COPY setup_scripts/setting_tools_index.py /galaxy/setting_tools_index.py
 COPY setup_scripts/index_file_list.txt /galaxy/index_file_list.txt
 COPY setup_scripts/index_file_list_bowtie2.txt /galaxy/index_file_list_bowtie2.txt
 RUN cp -a /galaxy-central/config/tool_data_table_conf.xml.sample /galaxy-central/config/tool_data_table_conf.xml && \
     python /galaxy/setting_tools_index.py index_file_list.txt index_file_list_bowtie2.txt
 
-# Import Bit-woorkflow to admin-user
+# Import Bit-workflow to admin-user
 WORKDIR /galaxy-central
 COPY setup_scripts/bit-workflow_install_docker.py /galaxy/bit-workflow_install_docker.py
 COPY setup_scripts/bit-workflow_install_docker.sh /galaxy-central/bit-workflow_install_docker.sh

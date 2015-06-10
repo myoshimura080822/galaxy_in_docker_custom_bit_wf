@@ -15,16 +15,32 @@ script_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 workdir = '/galaxy-central'
 tooldir = workdir + '/tools'
 
-def add_tool_conf(tree, list):
-    root_elm = tree.getroot()
-    add_node = ET.Element('section', name='Bit-Tools', id='bittools')
-    for name in list:
+rnatools_repo = 'tools_of_rnaseq_on_docker_galaxy'
+pretools_repo = 'tools_of_preanalysis_on_docker_galaxy' 
+
+def add_tool_conf(repo, sectionname, sectionid):
+    mytoolsdir = tooldir + '/' + repo + '/'
+    xml_list = [file.replace(tooldir + '/', "") for file in get_all_xml(mytoolsdir)]
+    print (set(xml_list))
+    #print xml_list
+
+    os.chdir(workdir + '/config')
+    tool_tree = ET.parse('tool_conf.xml.main')
+    for e in tool_tree.getiterator():
+        if e.get('file') in xml_list:
+            xml_list.remove(e.get('file'))
+            print '%s tool node already created.' % e.get('file')
+    print xml_list
+
+    root_elm = tool_tree.getroot()
+    add_node = ET.Element('section', name=sectionname, id=sectionid)
+    for name in xml_list:
         snode_tool = ET.Element('tool', file=name)
         add_node.append(snode_tool)
     root_elm.append(add_node)
     print root_elm.getchildren()[len(root_elm)-1].attrib
     print root_elm.getchildren()[len(root_elm)-1].getchildren()
-    tree.write('tool_conf.xml.main')
+    tool_tree.write('tool_conf.xml.main')
 
 def get_all_xml(directory):
     for root, dirs, files in os.walk(directory):
@@ -36,26 +52,18 @@ def get_all_xml(directory):
 def main():
     try:
         print ':::::::::::::::::::::::::::::::::::::::::::'
-        print '>>>>>>>>>>>>>>>>> clone BiT Tools from github...'
+        print '>>>>>>>>>>>>>>>>> clone repository...'
         os.chdir(tooldir)
-        git_url = 'https://github.com/myoshimura080822/galaxy-mytools_rnaseq.git'
-        Repo.clone_from(git_url, 'galaxy-mytools_rnaseq')
+        git_url_rna = 'https://github.com/myoshimura080822/'+ rnatools_repo +'.git'
+        git_url_pre = 'https://github.com/myoshimura080822/'+ pretools_repo +'.git'
+        Repo.clone_from(git_url_rna, rnatools_repo)
+        Repo.clone_from(git_url_pre, pretools_repo)
 
         print ':::::::::::::::::::::::::::::::::::::::::::'
-        print '>>>>>>>>>>>>>>>>> add BiT tool-node to tool_conf.xml...'
-        mytoolsdir = tooldir + '/galaxy-mytools_rnaseq/'
-        xml_list = [file.replace(tooldir + '/', "") for file in get_all_xml(mytoolsdir)]
-        print (set(xml_list))
-        print xml_list
-
-        os.chdir(workdir + '/config')
-        tool_tree = ET.parse('tool_conf.xml.main')
-        for e in tool_tree.getiterator():
-            if e.get('file') in xml_list:
-                xml_list.remove(e.get('file'))
-                print '%s tool node already created.' % e.get('file')
-        print xml_list
-        add_tool_conf(tool_tree, xml_list)
+        print '>>>>>>>>>>>>>>>>> add tool-node to tool_conf.xml...'
+        
+        add_tool_conf(rnatools_repo, 'Custom tools of RNAseq', 'custom_tools_of_rnaseq')
+        add_tool_conf(pretools_repo, 'Custom tools of Pre-Analysis', 'custom_tools_of_pre')
         print '>>>>>>>>>>>>>>>>> script ended :)'
         return 0
 
