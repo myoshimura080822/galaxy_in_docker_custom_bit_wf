@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <job_conf>
-    <plugins workers="10">
+    <plugins workers="8">
         <plugin id="slurm" type="runner" load="galaxy.jobs.runners.slurm:SlurmJobRunner">
             <param id="drmaa_library_path">/usr/lib/slurm-drmaa/lib/libdrmaa.so</param>
         </plugin>
@@ -20,7 +20,7 @@
         </destination>
     </destinations>
     <limits>
-        <limit type="registered_user_concurrent_jobs">5</limit>
+        <limit type="registered_user_concurrent_jobs">4</limit>
         <limit type="unregistered_user_concurrent_jobs">1</limit>
     </limits>
 </job_conf>
