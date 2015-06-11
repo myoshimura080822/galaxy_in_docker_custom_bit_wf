@@ -78,6 +78,10 @@ COPY setup_scripts/bit-workflow_install_docker.py /galaxy/bit-workflow_install_d
 COPY setup_scripts/bit-workflow_install_docker.sh /galaxy-central/bit-workflow_install_docker.sh
 RUN sh /galaxy-central/bit-workflow_install_docker.sh
 
+# Install ToolShed-tools
+WORKDIR /galaxy-central
+RUN install-repository "--url https://toolshed.g2.bx.psu.edu/ -o devteam --name samtools_flagstat -r 0072bf593791 --panel-section-name NGS-QCtools"
+
 # Mark folders as imported from the host.
 VOLUME ["/export/", "/data/", "/var/lib/docker"]
 
