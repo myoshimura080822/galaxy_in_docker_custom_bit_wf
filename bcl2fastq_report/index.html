@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Script-Type" content="text/javascript">
+        <title>bcl2fastq Reports</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bootstrap -->
+        <link href="bootswatch/flatly/bootstrap.min.css" rel="stylesheet" media="screen">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12" id="report_link">
+          <div class="jumbotron">
+            <h1>bcl2fastq Reports</h1>
+            <p>Human-readable HTML reports of converted fastq.gz (generated from data in the DemultiplexingStats.xml and ConversionStats.xml)</p>
+          </div>
+          <a href="#" class="btn btn-success btn-lg btn-block" onclick="popup_modeless('150518_NS500723_0004_AH5K2HBGXX_201506151144/html/index.html')">150518_NS500723_0004_AH5K2HBGXX</a>
+          <a href="#" class="btn btn-success btn-lg btn-block" onclick="popup_modeless('150522_NS500723_0005_AH5MN5BGXX_201506151536/html/index.html')">150522_NS500723_0005_AH5MN5BGXX</a>
+          <a href="#" class="btn btn-success btn-lg btn-block" onclick="popup_modeless('150604_NS500723_0006_AH5JNYBGXX_201506151603/html/index.html')">150604_NS500723_0006_AH5JNYBGXX</a>
+          <a href="#" class="btn btn-success btn-lg btn-block" onclick="popup_modeless('150611_NS500723_0009_AH5KKFBGXX_201506151631/html/index.html')">150611_NS500723_0009_AH5KKFBGXX</a>
+      <a class="btn btn-success btn-lg btn-block" href="#" onclick="popup_modeless('150518_NS500723_0004_AH5K2HBGXX_201506151144_201506152329/index.html')">150518_NS500723_0004_AH5K2HBGXX_201506151144_201506152329</a><a class="btn btn-success btn-lg btn-block" href="#" onClick="popup_modeless('150609_NS500723_0007_AH5MMMBGXX_201506152335/index.html')">150609_NS500723_0007_AH5MMMBGXX_201506152335</a></div>
+    </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://code.jquery.com/jquery.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/bootstrap.min.js"></script>
+
+        <script language="JavaScript">
+        function popup_modeless(url){
+            var newWin = window.open(
+                    url,
+                    "pop",
+                    "width=1200, height=900"
+            );
+            newWin.focus();
+        }
+        </script>
+
+    </div></body>
+</html>
