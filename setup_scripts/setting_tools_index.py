@@ -18,17 +18,16 @@ from xml.etree import ElementTree as ET
 argvs = sys.argv
 argc = len(argvs)
 
-out_dname = '/data/sailfish_index'
-bowtie2_idx_dname = ['/data/bowtie2_index/mm9_ucsc/Mus_musculus/UCSC/mm9/Sequence/Bowtie2Index','/data/bowtie2_index/mm10_ucsc/Mus_musculus/UCSC/mm10/Sequence/Bowtie2Index']
+sailfish_dname = '/data/sailfish_index'
+bowtie2_dname = '/data/bowtie2_index'
 loc_dname = '/galaxy-central/tool-data'
 
-if (argc != 3):
-    print 'Usage: # python %s filename(Sailfish index_list) filename(Bowtie2 index_list)' % argvs[0]
+if (argc != 2):
+    print 'Usage: # python %s index_list_filename' % argvs[0]
     quit()
 
-def read_input(name):
-    num = 1 if name == 'Sailfish' else 2
-    f = open(argvs[num])
+def read_input():
+    f = open(argvs[1])
     ret_list = []
 
     for i in f.readlines():
@@ -40,13 +39,18 @@ def read_input(name):
     f.close
     return ret_list
 
-def create_loc_file(index_list):
-    f = codecs.open("sailfish_index.loc", "w", "utf-8")
+def create_loc_file(index_list, loc_name, dirname):
+    f = codecs.open(loc_name, "w", "utf-8")
     for item in index_list:
         index_id = item.split(',')[0]
-        index_name = item.split(',')[2]
-        index_dir = out_dname + '/' + index_id
-        str_loc = '%s : %s : %s : %s' % (index_id,index_id,index_name,index_dir)
+        index_name = item.split(',')[1]
+        
+        if "sailfish" in dirname:
+            index_dir = dirname + '/' + index_id
+        else:
+            index_dir = dirname + '/' + index_id + '/' + index_id
+        
+        str_loc = '%s : %s : %s : %s' % (index_id,index_id,index_name,index_dir)    
         print str_loc
         f.write('%s\t%s\t%s\t%s\n' % (index_id,index_id,index_name,index_dir))
     f.close()
@@ -60,9 +64,9 @@ def get_bowtie2index_dir(path):
     dir_chk = filter(lambda x:x.find("Bowtie2Index") > -1, dir_list)
     return dir_chk[0] if len(dir_chk) > 0 else ""
 
-def create_bowtie2_loc_file(index_dir, index_list):
+def create_bowtie2_loc_file(index_list, dirname):
     f = codecs.open("bowtie2_indices.loc", "w", "utf-8")
-    for dir_name in index_dir:
+    for item in index_list:
         if len(dir_name) > 0:
             item_info = filter(lambda x:x.find(dir_name.split('/')[-6]) > -1, index_list)[0]
             index_id = item_info.split('_')[0]
@@ -88,16 +92,13 @@ def add_tool_data_table_conf(tree, name, locname):
 def main():
     try:
         input_index_list = []
-        input_index_list = read_input('Sailfish')
+        input_index_list = read_input()
         print 'length of index_list: ' + str(len(input_index_list))
-        input_bowtie2_index_list = []
-        input_bowtie2_index_list = read_input('Bowtie2')
-        print 'length of Bowtie2_index_list: ' + str(len(input_bowtie2_index_list))
         
         print ':::::::::::::::::::::::::::::::::::::::::::'
         print '>>>>>>>>>>>>>>>>> create sailfish_index.loc...'
         os.chdir(loc_dname)
-        create_loc_file(input_index_list)
+        create_loc_file(input_index_list, "sailfish_index.loc", sailfish_dname)
 
         print ':::::::::::::::::::::::::::::::::::::::::::'
         print '>>>>>>>>>>>>>>>>> add sailfish index-node to tool_data_table_conf.xml...'
@@ -108,7 +109,7 @@ def main():
         print ':::::::::::::::::::::::::::::::::::::::::::'
         print '>>>>>>>>>>>>>>>>> create bowtie2_indices.loc...'
         os.chdir(loc_dname)
-        create_bowtie2_loc_file(bowtie2_idx_dname, input_bowtie2_index_list)
+        create_loc_file(input_index_list, "bowtie2_indices.loc", bowtie2_dname)
 
         print ':::::::::::::::::::::::::::::::::::::::::::'
         print '>>>>>>>>>>>>>>>>> add bowtie2 index-node to tool_data_table_conf.xml...'

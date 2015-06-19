@@ -33,7 +33,7 @@ COPY galaxy_lib/upload.py /galaxy-central/tools/data_source/upload.py
 
 # Make import_data dir
 RUN mkdir /galaxy-central/config/import_data && \
-    cd /galaxy-central/config/import_data;ln -s /data/ref_fasta;ln -s /data/adapter_primer
+    cd /galaxy-central/config/import_data;ln -s /data/transcriptome_ref_fasta;ln -s /data/adapter_primer
 
 # Install Sailfish
 WORKDIR /galaxy
@@ -56,21 +56,15 @@ COPY setup_scripts/bit-tools_install_docker.py /galaxy/bit-tools_install_docker.
 RUN python /galaxy/bit-tools_install_docker.py && \
     cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
 
-# Install custom for docker-tools
-#COPY setup_scripts/for-hiseq-tools_install_docker.py /galaxy/for-hiseq-tools_install_docker.py
-#RUN python /galaxy/for-hiseq-tools_install_docker.py && \
-#    cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
-
 # replace migrate ToolSheds tools
 COPY modefied_tools/for_latest_fastq-mcf.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/jjohnson/fastq_mcf/b61f1466ce8f/fastq_mcf/fastq-mcf.xml
 COPY modefied_tools/for_latest_rgFastQC.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/devteam/fastqc/8c650f7f76e9/fastqc/rgFastQC.xml
 
-# Setting Index
+# Setting Sailfish and Bowtie2 Index
 COPY setup_scripts/setting_tools_index.py /galaxy/setting_tools_index.py
 COPY setup_scripts/index_file_list.txt /galaxy/index_file_list.txt
-COPY setup_scripts/index_file_list_bowtie2.txt /galaxy/index_file_list_bowtie2.txt
 RUN cp -a /galaxy-central/config/tool_data_table_conf.xml.sample /galaxy-central/config/tool_data_table_conf.xml && \
-    python /galaxy/setting_tools_index.py index_file_list.txt index_file_list_bowtie2.txt
+    python /galaxy/setting_tools_index.py index_file_list.txt
 
 # Import Bit-workflow to admin-user
 WORKDIR /galaxy-central

@@ -1,11 +1,11 @@
-hg19_cdna_all,http://ftp.ensembl.org/pub/release-75/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh37.75.cdna.all.fa.gz,human/Ensembl hg19 (GRCh37.75 cdna_all)
-hg19_refMrna,http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/refMrna.fa.gz,human/UCSC Feb.2009 (hg19, GRCh37)
+GRCh38_cdna_all,human cdna_all/Ensembl GRCh38(release-80)
+GRCh38_cdna_all_spike,Spike-in human cdna_all/Ensembl GRCh38(release-80)
 
-hg38_cdna_all,http://ftp.ensembl.org/pub/release-78/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz,human/Ensembl hg38 (GRCh38 cdna_all)
-hg38_refMrna,http://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/refMrna.fa.gz,human/UCSC Dec.2013 (hg38, GRCh38)
+hg38_refMrna,human refMrna/UCSC hg38(17-Jun-2015)
+hg38_refMrna_spike,Spike-in human refMrna/UCSC hg38(17-Jun-2015)
 
-mm09_cdna_all,http://ftp.ensembl.org/pub/release-67/fasta/mus_musculus/cdna/Mus_musculus.NCBIM37.67.cdna.all.fa.gz,mouse/Ensembl mm9 (NCBIM37.67 cdna_all)
-mm09_refMrna,http://hgdownload.cse.ucsc.edu/goldenPath/mm9/bigZips/refMrna.fa.gz,mouse/UCSC Jul.2007 (mm9)
+GRCm38_cdna_all,mouse cdna_all/Ensembl GRCm38(release-80)
+GRCm38_cdna_all_spike,Spike-in mouse cdna_all/Ensembl GRCm38(release-80)
 
-mm10_cdna_all,http://ftp.ensembl.org/pub/release-78/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz,mouse/Ensembl mm10 (GRCm38 cdna_all)
-mm10_refMrna,http://hgdownload.cse.ucsc.edu/goldenPath/mm10/bigZips/refMrna.fa.gz,mouse/UCSC Dec.2011 (mm10)
+mm10_refMrna,mouse refMrna/UCSC mm10(15-Jun-2015)
+mm10_refMrna_spike,Spike-in mouse refMrna/UCSC mm10(15-Jun-2015)

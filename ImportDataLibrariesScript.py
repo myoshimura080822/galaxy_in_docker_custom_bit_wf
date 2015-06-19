@@ -21,14 +21,15 @@ print u"ImportDataLibrariesScript.py Started......"
 argvs = sys.argv
 argc = len(argvs)
 
-if (argc != 5):
-    print 'Usage: # python %s fastq-dirname(can parent-dir) docker-mount-dir port-no filetype' % argvs[0]
+if (argc != 6):
+    print 'Usage: # python %s file-dir(can parent-dir) docker-mount-dir port-no filetype fileext' % argvs[0]
     quit()
 
 import_dir = argvs[1]
 mount_dir = argvs[2]
 port_no = argvs[3]
 file_type = argvs[4]
+file_ext = argvs[5]
 
 hostname = os.uname()[1]
 
@@ -141,7 +142,7 @@ def merge_pair_fastq(list, outdir):
 
 def get_import_files(dir_name):
     for root, dirs, files in os.walk(dir_name):
-        file_list = '\n'.join( [ os.path.join(root, filename) for filename in files if "." + file_type == os.path.splitext(filename)[1]] )
+        file_list = '\n'.join( [ os.path.join(root, filename) for filename in files if '.' + file_ext == os.path.splitext(filename)[1]] )
     return file_list
 
 class ScriptRunningError(Exception):
@@ -151,7 +152,7 @@ def import_data(new_lib_id, name_list):
     gi.libraries.upload_from_galaxy_filesystem(
         new_lib_id,
         name_list,
-        file_type = 'fastqsanger',
+        file_type = file_type,
         link_data_only = 'link_to_files'
     )
     time.sleep(1)

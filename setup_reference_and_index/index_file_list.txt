@@ -1,0 +1,5 @@
+GRCh38_cdna_all,http://ftp.ensembl.org/pub/release-80/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz,human/Ensembl(GRCh38 cdna_all,release-80)
+hg38_refMrna,http://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/refMrna.fa.gz,human/UCSC(hg38 refMrna,17-Jun-2015)
+
+GRCm38_cdna_all,http://ftp.ensembl.org/pub/release-80/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz,mouse/Ensembl(GRCm38 cdna_all,release-80)
+mm10_refMrna,http://hgdownload.cse.ucsc.edu/goldenPath/mm10/bigZips/refMrna.fa.gz,mouse/UCSC(mm10 refMrna,15-Jun-2015)

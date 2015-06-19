@@ -28,7 +28,7 @@ print u"Import_bal2fastq_toGalaxy.py Started......"
 argvs = sys.argv
 argc = len(argvs)
 
-if (argc < 4):
+if argc < 4 or argc == 5:
     print 'Usage: # python %s runfolder-dir docker-mount-dir port-no import_only=F not_report=F ' % argvs[0]
     quit()
 
@@ -36,12 +36,29 @@ run_dir = argvs[1]
 mount_dir = argvs[2]
 port_no = argvs[3]
 
+
+if not run_dir.endswith('/'):
+    run_d = run_dir + '/'
+else:
+    run_d = run_dir
+        
+if not mount_dir.endswith('/'):
+    mount_d = mount_dir + '/'
+else:
+    mount_d = mount_dir
+mount_d = mount_d + "next_seq_fastqgz/"
+
 import_only = False
 not_report = False
-if (argvs[4] == 'T'):
-    import_only = True
-if (argvs[5] == 'T'):
-    not_report = True
+galaxy_mount_dir = "/data/next_seq_fastqgz"
+
+if argc > 4 :
+    if argvs[4] == 'T':
+        import_only = True
+        galaxy_mount_dir = "/data"
+        mount_d = mount_d.replace("next_seq_fastqgz/", "")
+    if argvs[5] == 'T':
+        not_report = True
 
 hostname = os.uname()[1]
 
@@ -73,8 +90,7 @@ def create_datalib(dname, dist=""):
 def get_import_files(dir_name):
     for root, dirs, files in os.walk(dir_name):
         if "Reports" in dirs and "Stats" in dirs:
-            file_list = '\n'.join( [ os.path.join(root, filename) for filename in files 
-                if ".gz" == os.path.splitext(filename)[1]] )
+            file_list = '\n'.join( [ os.path.join(root, filename) for filename in files if ".gz" == os.path.splitext(filename)[1]] )
 
     return file_list
 
@@ -140,21 +156,11 @@ def generate_cmd(script, keys, vals):
 
 def main():
     try:
-    	if os.path.exists(run_dir) is False:
-            raise Exception, run_dir + ' is not found.'
-    	if os.path.exists(mount_dir) is False:
-            raise Exception, mount_dir + ' is not found.'
+    	if os.path.exists(run_d) is False:
+            raise Exception, run_d + ' is not found.'
+    	if os.path.exists(mount_d) is False:
+            raise Exception, mount_d + ' is not found.'
         
-        if not run_dir.endswith('/'):
-            run_d = run_dir + '/'
-        else:
-            run_d = run_dir
-        
-        if not mount_dir.endswith('/'):
-            mount_d = mount_dir + '/'
-        else:
-            mount_d = mount_dir
-
         if not import_only: 
             out_d = mount_d + run_d.split('/')[-2] + '_' + datetime + "/"
             print "output-dir : " + out_d
@@ -164,12 +170,12 @@ def main():
                             '--output-dir', '--stats-dir', '--reports-dir']
             value_list = [[run_d, run_d + 'InterOp', run_d + 'Data/Intensities/BaseCalls', run_d + 'SampleSheet.csv',
                             out_d, out_d + 'Stats', out_d + 'Reports']]
-            cmd = generate_cmd('/home/myoshimura/bso/bcl2fastq --no-lane-splitting', param_list, value_list)
+            cmd = generate_cmd(home_dir + '/src/bcl2fastq --no-lane-splitting', param_list, value_list)
         
             ### exec bcl2fastq
             [ run_bcl2fastq(x) for x in cmd ]
         else:
-             out_d = run_dir
+            out_d = run_d
         
         ### rename fastq.gz
         pair = False
@@ -182,14 +188,14 @@ def main():
 
         for out_file in print_tree(out_d):
             if pair:
-                p = re.compile("(.*?)(\_R\d+)(\_\d+\.fastq.gz)")
+                p = re.compile("(.*?)(\_S\d+)(\_R\d+)(\_\d+\.fastq.gz)")
                 m = p.match(out_file)
                 if m != None:
-                    newname = m.group(1) + m.group(2).replace('R','') + ".fastq.gz"
+                    newname = m.group(1) + m.group(3).replace('R','') + ".fastq.gz"
                     print newname
                     os.rename(out_file, newname)
             else:
-                p = re.compile("(.*?)(\_R\d+\_\d+\.fastq.gz)")
+                p = re.compile("(.*?)(\_S\d+)(\_R\d+)(\_\d+\.fastq.gz)")
                 m = p.match(out_file)
                 if m != None:
                     newname = m.group(1) + ".fastq.gz"
@@ -200,7 +206,7 @@ def main():
         if len(imp_file_list) == 0:
             raise Exception, 'import files not found.'
                         
-        imp_file_list = imp_file_list.replace(os.path.abspath(mount_d), '/data')
+        imp_file_list = imp_file_list.replace(os.path.abspath(mount_d), galaxy_mount_dir)
         print imp_file_list
     	
         ### import DataLibrary 
