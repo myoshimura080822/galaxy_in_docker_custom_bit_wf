@@ -59,6 +59,8 @@ RUN python /galaxy/bit-tools_install_docker.py && \
 # replace migrate ToolSheds tools
 COPY modefied_tools/for_latest_fastq-mcf.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/jjohnson/fastq_mcf/b61f1466ce8f/fastq_mcf/fastq-mcf.xml
 COPY modefied_tools/for_latest_rgFastQC.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/devteam/fastqc/8c650f7f76e9/fastqc/rgFastQC.xml
+COPY modefied_tools/edger_robust/edgeR.pl /shed_tools/toolshed.g2.bx.psu.edu/repos/fcaramia/edger/6324eefd9e91/edger/edgeR.pl
+COPY modefied_tools/edger_robust/edgeR.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/fcaramia/edger/6324eefd9e91/edger/edgeR.xml
 
 # Setting Sailfish and Bowtie2 Index
 COPY setup_scripts/setting_tools_index.py /galaxy/setting_tools_index.py
