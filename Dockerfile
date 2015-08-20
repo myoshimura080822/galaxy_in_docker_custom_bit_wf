@@ -12,10 +12,11 @@ RUN \
     apt-get -y install libcurl4-gnutls-dev && \
     apt-get -y install libglu1-mesa-dev freeglut3-dev mesa-common-dev
 
-#Install additional R Pkg
-WORKDIR /galaxy
-ADD setup_scripts/install_additional.R /galaxy/install_additional.R
-RUN R -e 'source("/galaxy/install_additional.R")'
+#150820 no longer need
+##Install additional R Pkg
+#WORKDIR /galaxy
+#ADD setup_scripts/install_additional.R /galaxy/install_additional.R
+#RUN R -e 'source("/galaxy/install_additional.R")'
 
 # Replace modefied setting files
 WORKDIR /galaxy-central
