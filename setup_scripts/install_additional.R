@@ -2,6 +2,12 @@ is.installed <- function(mypkg){
     is.element(mypkg, installed.packages()[,1])
 }
 
+#for destiny
+install.packages('gridExtra', repos="http://cran.rstudio.com/")
+install.packages('plotrix', repos="http://cran.rstudio.com/")
+install.packages('spatgraphs', repos="http://cran.rstudio.com/")
+
+if (FALSE){
 if (!is.installed("ggplot2")){
     install.packages('ggplot2', repos="http://cran.rstudio.com/")
 }
@@ -32,4 +38,5 @@ if (!is.installed("factoextra")){
 
 if (!is.installed("rgl")){
     install.packages('rgl', repos="http://cran.rstudio.com/")
+}
 }
