@@ -1,0 +1,1 @@
+marmoset_cdna_all,http://ftp.ensembl.org/pub/release-81/fasta/callithrix_jacchus/cdna/Callithrix_jacchus.C_jacchus3.2.1.cdna.all.fa.gz,marmoset_Ensembl(cdna_all,release-81)

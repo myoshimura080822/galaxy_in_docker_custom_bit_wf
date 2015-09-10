@@ -9,3 +9,5 @@ GRCm38_cdna_all_spike,Spike-in mouse cdna_all/Ensembl GRCm38(release-80)
 
 mm10_refMrna,mouse refMrna/UCSC mm10(15-Jun-2015)
 mm10_refMrna_spike,Spike-in mouse refMrna/UCSC mm10(15-Jun-2015)
+
+marmoset_cdna_all,marmoset cdna_all/Ensembl (release-81)
