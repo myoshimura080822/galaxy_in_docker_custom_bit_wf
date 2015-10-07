@@ -55,12 +55,16 @@ RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナで�
 ![sailfish-singleWF](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/RNA-seq_01_Single-end(Quantifying%20in%20Sailfish).png)
 
 **RNA-seq_02_Plotting of QC-all,corr,H-clustering and PCA)**
+![QC_PCQ_Corr](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/RNA-seq_02_Plotting%20of%20QC-all%2Ccorr%2CH-clustering%20and%20PCA).png)
 
 **RNA-seq_03(Analysis of DEG in SCDE)**
+![DEG_on_SCDE](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/RNA-seq_03(Analysis%20of%20DEG%20in%20SCDE).png)
 
 **RNA-seq_03(Analysis of DEG in edgeR)**
+![DEG_on_edgeR](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/RNA-seq_03(Analysis%20of%20DEG%20in%20edgeR).png)
 
 **RNA-seq_03(Analysis of multi-DEG in edgeR_robust, ANOVA-like)**
+![DEG_on_edgeR](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/RNA-seq_03(Analysis%20of%20DEG%20in%20edgeR).png)
 
 ## <a id="usage">Usage
 * [docker](https://docs.docker.com/installation/)のインストールが必要です
