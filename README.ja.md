@@ -27,11 +27,11 @@ RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナで�
 ## <a id="installed-tools">Installed galaxy tools
 * Fastqmcf
 * FastQC
-* Tophat2, Bowtie2
+* Bowtie2
 * samtools_flagstat
+* [Sailfish](http://www.cs.cmu.edu/~ckingsf/software/sailfish/)
 * eXpress
 * edgeR, [edgeR robust](http://imlspenticton.uzh.ch/robinson_lab/edgeR_robust/)
-* [Sailfish](http://www.cs.cmu.edu/~ckingsf/software/sailfish/)
 * [SCDE](http://hms-dbmi.github.io/scde/)
 * [destiny](https://www.helmholtz-muenchen.de/icb/destiny)
 * Toolfactory, Toolfactory2
@@ -56,18 +56,41 @@ RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナで�
 
 ## <a id="usage">Usage
 * [docker](https://docs.docker.com/installation/)のインストールが必要です
-* dockerの詳細な解説は[docker manual](http://docs.docker.io/)を参照してください
+* dockerコマンドの詳細な解説は[docker manual](http://docs.docker.io/)を参照してください
 
-### 前準備
+### 1.マウントディレクトリの作成
 * dockerイメージは読み取り専用であり、コンテナ内部の変更は再起動時にリセットされます。
 * docker run の前に、以下の2つをホストの任意の場所に作成する必要があります。
-  * コンテナで永続的に扱うデータをエクスポートするディレクトリ (``/export/``にマウント)
-  * Galaxyで使用するファイルをインポートするディレクトリ (``/data/``にマウント)
-* ``/data/``にマウントするディレクトリ配下に以下を作成してください<<必須>>
+ * 1) コンテナで永続的に扱うデータをエクスポートするディレクトリ (``/export/``にマウント)
+ * 2) Galaxyで使用するファイルをインポートするディレクトリ (``/data/``にマウント)
+ * 3) ``/data/``にマウントするディレクトリ配下に以下を作成<<必須>>
   * adapter_primer
   * transcriptome_ref_fasta
 
-### 起動コマンド
+### 2.Sailfish, Bowtie2のIndex作成
+* 1) ホスト環境にSailfish, Bowtie2をDL
+ * [Sailfish DL](http://www.cs.cmu.edu/~ckingsf/software/sailfish/downloads.html)
+ * [Bowtie2 DL](http://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.5/)
+* 2) git clone
+```bash
+git clone https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf.git
+cd galaxy_in_docker_custom_bit_wf
+```
+* 3) Ref-fasta DL
+```bash
+cd ./setup_reference_and_index/
+python setup_TranscriptomeRef_in_Galaxy.py index_file_list.txt <</data/ mount Dir配下の任意のフォルダ>>
+```
+ * human/Ensembl(GRCh38 cdna_all,release-82)
+ * human/UCSC(hg38 refMrna,17-Jun-2015)
+ * mouse/Ensembl(GRCm38 cdna_all,release-82)
+ * mouse/UCSC(mm10 refMrna,15-Jun-2015)
+
+* 4) Create Sailfish / Bowtie2 Index
+```bash
+python create_sailfish_and_Bowtie2_index.py <</data/ mount Dir>> <<Ref-fasta DL-Dir>> <<Sailfish fullpath>> <<Bowtie2 fullpath>>
+```
+### 3.docker run
 ```bash
 docker run -d -p 8080:80 -v /home/user/galaxy_storage/:/export/ -v /home/user/galaxy_data:/data/ myoshimura080822/galaxy_in_docker_custom_bit_wf
 ```
