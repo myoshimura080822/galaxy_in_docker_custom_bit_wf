@@ -40,11 +40,19 @@ RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナで�
 
 **RNA-seq_01_Paired-end(Quantifying in Sailfish)**
 
+![sailfish-pairWF](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/RNA-seq_01_Paired-end(Quantifying%20in%20Sailfish).png)
+
 **RNA-seq_01_Paired-end(Quantifying in eXpress)**
+
+![express-pairWF](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/RNA-seq_01_Paired-end(Quantifying%20in%20eXpress).png)
 
 **RNA-seq_01_Single-end(Quantifying in eXpress)**
 
+![express-singleWF](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/RNA-seq_01_Single-end(Quantifying%20in%20eXpress).png)
+
 **RNA-seq_01_Single-end(Quantifying in Sailfish)**
+
+![sailfish-singleWF](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/RNA-seq_01_Single-end(Quantifying%20in%20Sailfish).png)
 
 **RNA-seq_02_Plotting of QC-all,corr,H-clustering and PCA)**
 
