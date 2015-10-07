@@ -25,8 +25,8 @@ print 'make_sailfish_index.py Started......'
 argvs = sys.argv
 argc = len(argvs)
 
-if (argc != 3):
-    print 'Usage: # python %s mount_dirname ref_dirname' % argvs[0]
+if (argc != 5):
+    print 'Usage: # python %s mount_dirname ref_dirname sailfish-path bowtie-path' % argvs[0]
     quit()
 
 logger = mp.log_to_stderr(logging.DEBUG)
@@ -38,6 +38,14 @@ if not mountdir.endswith('/'):
 ref_dir = argvs[2]
 if not ref_dir.endswith('/'):
     ref_dir = ref_dir + '/'
+
+sailfish_path = argvs[3]
+if not sailfish_path.endswith('/'):
+    sailfish_path = sailfish_path + '/'
+
+bowtie_path = argvs[4]
+if not bowtie_path.endswith('/'):
+    bowtie_path = bowtie_path + '/'
 
 blah = "no callback"
 out_dname = mountdir + 'sailfish_index/'
@@ -91,7 +99,7 @@ def generate_cmds(script, keys, vals):
 
 def make_param(ref):
     idx_dir = out_dname + ref.split('/')[-1].replace(".fa","")
-
+    print idx_dir
     if not os.path.isdir(idx_dir):
         makeDir(idx_dir)
         return [ref, idx_dir, '20']
@@ -99,11 +107,12 @@ def make_param(ref):
         return []
 
 def make_param_b(ref):
-    idx_dir = out_dname_bowtie + ref.split('/')[-1].replace(".fa","")
-
+    fname = ref.split('/')[-1].replace(".fa","")
+    idx_dir = out_dname_bowtie + fname
+    print idx_dir
     if not os.path.isdir(idx_dir):
         makeDir(idx_dir)
-        return [ref, idx_dir]
+        return [ref, idx_dir + "/" + fname]
     else:
         return []
 
@@ -127,10 +136,11 @@ def mycallback(x):
 
 def main():
     try:
-        os.environ["PATH"] = os.environ["PATH"] + ':' + os.environ["HOME"] + "/src/Sailfish-0.6.3-Linux_x86-64/bin:" + os.environ["HOME"] + "/src/bowtie2-2.2.5"
+        os.environ["PATH"] = os.environ["PATH"] + ':' + sailfish_path + "bin:" + bowtie_path
         print os.environ["PATH"]
-        os.environ["LD_LIBRARY_PATH"] = os.environ["HOME"] + "/src/Sailfish-0.6.3-Linux_x86-64/lib"
-
+        os.environ["LD_LIBRARY_PATH"] = sailfish_path + "lib"
+        print os.environ["LD_LIBRARY_PATH"]
+        
         makeDir(out_dname)
         makeDir(out_dname_bowtie)
 
@@ -166,7 +176,7 @@ def main():
             return
 
         print cmds
-        if mp.cpu_count() > 4:
+        if mp.cpu_count() > 8:
             pool = Pool(4)
             try:
                 result = pool.map_async(run_cmd, cmds, callback=mycallback)
@@ -181,7 +191,6 @@ def main():
                 pool.terminate()
             finally:
                 pool.join()
-
         else:
             print 'cpu is single core.'
             [ run_cmd(x) for x in cmds ]

@@ -1,13 +1,11 @@
-GRCh38_cdna_all,human cdna_all/Ensembl GRCh38(release-80)
-GRCh38_cdna_all_spike,Spike-in human cdna_all/Ensembl GRCh38(release-80)
+GRCh38_cdna_all,human cdna_all/Ensembl GRCh38(release-82)
+GRCh38_cdna_all_spike,Spike-in human cdna_all/Ensembl GRCh38(release-82)
 
 hg38_refMrna,human refMrna/UCSC hg38(17-Jun-2015)
 hg38_refMrna_spike,Spike-in human refMrna/UCSC hg38(17-Jun-2015)
 
-GRCm38_cdna_all,mouse cdna_all/Ensembl GRCm38(release-80)
-GRCm38_cdna_all_spike,Spike-in mouse cdna_all/Ensembl GRCm38(release-80)
+GRCm38_cdna_all,mouse cdna_all/Ensembl GRCm38(release-82)
+GRCm38_cdna_all_spike,Spike-in mouse cdna_all/Ensembl GRCm38(release-82)
 
 mm10_refMrna,mouse refMrna/UCSC mm10(15-Jun-2015)
 mm10_refMrna_spike,Spike-in mouse refMrna/UCSC mm10(15-Jun-2015)
-
-marmoset_cdna_all,marmoset cdna_all/Ensembl (release-81)

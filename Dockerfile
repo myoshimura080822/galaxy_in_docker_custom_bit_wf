@@ -5,17 +5,13 @@ FROM myoshimura080822/galaxy_in_docker_custom
 MAINTAINER Mika Yoshimura <myoshimura080822@gmail.com>
 
 #Install OS tools we'll need
-RUN \
-    apt-get -y update && \
-    apt-get -y install imagemagick && \
-    apt-get -y install pandoc && \
-    apt-get -y install libcurl4-gnutls-dev && \
-    apt-get -y install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+#RUN \
+#    apt-get -y update && \
 
 #Install additional R Pkg
-WORKDIR /galaxy
-ADD setup_scripts/install_additional.R /galaxy/install_additional.R
-RUN R -e 'source("/galaxy/install_additional.R")'
+#WORKDIR /galaxy
+#ADD setup_scripts/install_additional.R /galaxy/install_additional.R
+#RUN R -e 'source("/galaxy/install_additional.R")'
 
 # Replace modefied setting files
 WORKDIR /galaxy-central
@@ -35,23 +31,8 @@ COPY galaxy_lib/upload.py /galaxy-central/tools/data_source/upload.py
 RUN mkdir /galaxy-central/config/import_data && \
     cd /galaxy-central/config/import_data;ln -s /data/transcriptome_ref_fasta;ln -s /data/adapter_primer
 
-# Install Sailfish
-WORKDIR /galaxy
-RUN wget https://github.com/kingsfordgroup/sailfish/releases/download/v0.6.3/Sailfish-0.6.3-Linux_x86-64.tar.gz && \
-    tar -zxvf Sailfish-0.6.3-Linux_x86-64.tar.gz && \
-    rm Sailfish-0.6.3-Linux_x86-64.tar.gz && \
-    mv /galaxy/Sailfish-0.6.3-Linux_x86-64/lib/libz.so.1 /galaxy/Sailfish-0.6.3-Linux_x86-64/lib/libz.so.1_bk
-ENV PATH $PATH:/galaxy/Sailfish-0.6.3-Linux_x86-64/bin
-ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/galaxy/Sailfish-0.6.3-Linux_x86-64/lib
-
-# Clone Bug-fixed ToolFactory
-RUN git clone https://github.com/myoshimura080822/galaxy-mytools_ToolFactory.git && \
-    mv /shed_tools/toolshed.g2.bx.psu.edu/repos/fubar/toolfactory/e9ebb410930d/toolfactory/rgToolFactory.py /shed_tools/toolshed.g2.bx.psu.edu/repos/fubar/toolfactory/e9ebb410930d/toolfactory/rgToolFactory_BK.py && \
-    cp /galaxy/galaxy-mytools_ToolFactory/rgToolFactory.py /shed_tools/toolshed.g2.bx.psu.edu/repos/fubar/toolfactory/e9ebb410930d/toolfactory/ && \
-    mv /shed_tools/toolshed.g2.bx.psu.edu/repos/fubar/toolfactory/e9ebb410930d/toolfactory/rgToolFactory.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/fubar/toolfactory/e9ebb410930d/toolfactory/rgToolFactory_BK.xml && \
-    cp /galaxy/galaxy-mytools_ToolFactory/rgToolFactory.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/fubar/toolfactory/e9ebb410930d/toolfactory/
-
 # Install Custom Bit-Tools
+WORKDIR /galaxy
 COPY setup_scripts/bit-tools_install_docker.py /galaxy/bit-tools_install_docker.py
 RUN python /galaxy/bit-tools_install_docker.py && \
     cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
@@ -73,10 +54,6 @@ WORKDIR /galaxy-central
 COPY setup_scripts/bit-workflow_install_docker.py /galaxy/bit-workflow_install_docker.py
 COPY setup_scripts/bit-workflow_install_docker.sh /galaxy-central/bit-workflow_install_docker.sh
 RUN sh /galaxy-central/bit-workflow_install_docker.sh
-
-# Install ToolShed-tools
-WORKDIR /galaxy-central
-RUN install-repository "--url https://toolshed.g2.bx.psu.edu/ -o devteam --name samtools_flagstat -r 0072bf593791 --panel-section-name NGS-QCtools"
 
 # Mark folders as imported from the host.
 VOLUME ["/export/", "/data/", "/var/lib/docker"]
