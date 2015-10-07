@@ -1,3 +1,92 @@
-###test
+# Galaxy Image for RNA-Seq WF
 
-###テスト
+RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナです。 
+
+## Base Image
+[bgruening/galaxy-stable](https://github.com/bgruening/docker-galaxy-stable)
+
+* based on Ubuntu 14.04 LTS
+* all recommended Galaxy requirements are installed
+
+## Index
+* [Installed tools](#installed-tools)
+* [Usage](#usage)
+* [Users & Passwords](#user--passowrds)
+* [Restarting Galaxy](#restarting-galaxy)
+* [Licence (MIT)](#license-mit)
+
+## <a id="installed-pkg">Installed packages
+* tree
+* zsh, oh_my_zsh
+* vim
+* R 3.2.2
+* Python 2.7.6
+
+## <a id="installed-tools">Installed galaxy tools
+* Fastqmcf
+* FastQC
+* Tophat2, Bowtie2
+* samtools_flagstat
+* eXpress
+* edgeR, [edgeR robust](http://imlspenticton.uzh.ch/robinson_lab/edgeR_robust/)
+* [Sailfish](http://www.cs.cmu.edu/~ckingsf/software/sailfish/)
+* [SCDE](http://hms-dbmi.github.io/scde/)
+* [destiny](https://www.helmholtz-muenchen.de/icb/destiny)
+* Toolfactory, Toolfactory2
+
+## <a id="usage">Usage
+* [Docker](https://docs.docker.com/installation/)のインストールが必要です
+* dockerの詳細な解説は[docker manual](http://docs.docker.io/)を参照してください
+
+### 前準備
+* dockerイメージは読み取り専用であり、コンテナ内部の変更は再起動時にリセットされます。
+* このため、docker run の前に、以下の2つをホストの任意の場所に作成する必要があります。
+  * コンテナで永続的に扱うデータをエクスポートするディレクトリ (``/export/``にマウント)
+  * Galaxyで使用するファイルをインポートするディレクトリ (``/data/``にマウント)
+* ``/data/``にマウントするディレクトリ配下に以下を作成してください<<必須>>
+  * adapter_primer
+  * transcriptome_ref_fasta
+
+### 起動コマンド
+```bash
+docker run -d -p 8080:80 -v /home/user/galaxy_storage/:/export/ -v /home/user/galaxy_data:/data/ myoshimura080822/galaxy_in_docker_custom_bit_wf
+```
+* ``docker run`` コンテナを起動
+* ``-p 8080:80`` コンテナのポート80(Apacheサーバー)がホストの8080で有効になる(変更可)
+* ``http://localhost:8080`` Galaxyにアクセスするurl
+* ``bgruening/galaxy-genome-annotation`` イメージ/コンテナ名
+* ``-d`` コンテナをデーモンモードで起動
+* ``-v /home/user/galaxy_storage/:/export/`` コンテナの ``/export/``に``/home/user/galaxy_storage``をマウントする
+  * 上記のディレクトリに対し、``startup.sh`` スクリプト(starting Apache, PostgreSQL and Galaxy) が以下の操作を行う
+    * ``/export/`` が空の場合、[PostgreSQL](http://www.postgresql.org/) DB, Galaxy DB, Shed Tools, Tool Dependencies やその他config scriptsを/export/に移動し、シンボリックリンクが作成される
+    * ``/export/`` が空でない場合、中身は変更せずシンボリックリンクだけが作成される
+* ``-v /home/user/galaxy_data:/data/`` コンテナの ``/data/``に``/home/user/galaxy_data``をマウントする
+  * ``/data/adapter_primer``, ``/data/transcriptome_ref_fasta`` 配下のファイルはgalaxyのDataLibraryでの管理が可能です
+
+## <a id='user--passowrds'>Users & Passwords
+* galaxy admin username ``admin@galaxy.org`` 
+* password ``admin``
+
+## <a id='restarting-galaxy'>Restarting Galaxy
+* 必ず``docker exec`` を使用してください
+```docker exec <container name> supervisorctl restart galaxy:```
+
+## <a id="license-mit">Licence (MIT)
+=============
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
