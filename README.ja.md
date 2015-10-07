@@ -9,7 +9,9 @@ RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナで�
 * all recommended Galaxy requirements are installed
 
 ## Index
+* [Installed packages](#installed-pkg)
 * [Installed tools](#installed-tools)
+* [Installed workflow](#installed-wf)
 * [Usage](#usage)
 * [Users & Passwords](#user--passowrds)
 * [Restarting Galaxy](#restarting-galaxy)
@@ -34,13 +36,31 @@ RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナで�
 * [destiny](https://www.helmholtz-muenchen.de/icb/destiny)
 * Toolfactory, Toolfactory2
 
+## <a id="installed-wf">Installed workflow
+
+**RNA-seq_01_Paired-end(Quantifying in Sailfish)**
+
+**RNA-seq_01_Paired-end(Quantifying in eXpress)**
+
+**RNA-seq_01_Single-end(Quantifying in eXpress)**
+
+**RNA-seq_01_Single-end(Quantifying in Sailfish)**
+
+**RNA-seq_02_Plotting of QC-all,corr,H-clustering and PCA)**
+
+**RNA-seq_03(Analysis of DEG in SCDE)**
+
+**RNA-seq_03(Analysis of DEG in edgeR)**
+
+**RNA-seq_03(Analysis of multi-DEG in edgeR_robust, ANOVA-like)**
+
 ## <a id="usage">Usage
-* [Docker](https://docs.docker.com/installation/)のインストールが必要です
+* [docker](https://docs.docker.com/installation/)のインストールが必要です
 * dockerの詳細な解説は[docker manual](http://docs.docker.io/)を参照してください
 
 ### 前準備
 * dockerイメージは読み取り専用であり、コンテナ内部の変更は再起動時にリセットされます。
-* このため、docker run の前に、以下の2つをホストの任意の場所に作成する必要があります。
+* docker run の前に、以下の2つをホストの任意の場所に作成する必要があります。
   * コンテナで永続的に扱うデータをエクスポートするディレクトリ (``/export/``にマウント)
   * Galaxyで使用するファイルをインポートするディレクトリ (``/data/``にマウント)
 * ``/data/``にマウントするディレクトリ配下に以下を作成してください<<必須>>
@@ -53,12 +73,12 @@ docker run -d -p 8080:80 -v /home/user/galaxy_storage/:/export/ -v /home/user/ga
 ```
 * ``docker run`` コンテナを起動
 * ``-p 8080:80`` コンテナのポート80(Apacheサーバー)がホストの8080で有効になる(変更可)
-* ``http://localhost:8080`` Galaxyにアクセスするurl
-* ``bgruening/galaxy-genome-annotation`` イメージ/コンテナ名
+* ``http://<<hostname or IP Address>>:8080`` Galaxyにアクセスするurl
+* ``myoshimura080822/galaxy_in_docker_custom_bit_wf`` イメージ/コンテナ名
 * ``-d`` コンテナをデーモンモードで起動
 * ``-v /home/user/galaxy_storage/:/export/`` コンテナの ``/export/``に``/home/user/galaxy_storage``をマウントする
   * 上記のディレクトリに対し、``startup.sh`` スクリプト(starting Apache, PostgreSQL and Galaxy) が以下の操作を行う
-    * ``/export/`` が空の場合、[PostgreSQL](http://www.postgresql.org/) DB, Galaxy DB, Shed Tools, Tool Dependencies やその他config scriptsを/export/に移動し、シンボリックリンクが作成される
+    * ``/export/`` が空の場合、[PostgreSQL](http://www.postgresql.org/) DB, Galaxy DB, Shed Tools, Tool Dependencies やその他config scriptsを``/export/``に移動し、シンボリックリンクが作成される
     * ``/export/`` が空でない場合、中身は変更せずシンボリックリンクだけが作成される
 * ``-v /home/user/galaxy_data:/data/`` コンテナの ``/data/``に``/home/user/galaxy_data``をマウントする
   * ``/data/adapter_primer``, ``/data/transcriptome_ref_fasta`` 配下のファイルはgalaxyのDataLibraryでの管理が可能です
@@ -68,11 +88,11 @@ docker run -d -p 8080:80 -v /home/user/galaxy_storage/:/export/ -v /home/user/ga
 * password ``admin``
 
 ## <a id='restarting-galaxy'>Restarting Galaxy
-* 必ず``docker exec`` を使用してください
-```docker exec <container name> supervisorctl restart galaxy:```
+* コンテナ内での再起動は使用できません (export配下のファイルが消去されます)
+* 以下のコマンドをホストで実行します
+*  ```docker exec <container name> supervisorctl restart galaxy:```
 
 ## <a id="license-mit">Licence (MIT)
-=============
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
