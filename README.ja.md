@@ -140,14 +140,23 @@ docker run -d -p 8080:80 -v /home/user/galaxy_storage/:/export/ -v /home/user/ga
 * 詳細な仕様は[Galaxy Wiki Data Libraries](https://wiki.galaxyproject.org/Admin/DataLibraries/Libraries)を参照
 
 * 1) adminでログイン
+
 * 2) 上部メニュー"Admin"を押下しDataLibrary管理画面を表示
+
 ![datalib_01](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/galaxy_datalib04.png)
+
 * 3) 画面右上``Create a new data library``ボタンで任意のディレクトリを作成
+
 * 4) 作成したディレクトリに移動し、画面右上``Add datasets``を押下
+
 * 5) ``Upload option:Upload directory of file,File Format:fasta, Server Directory:transcriptome_ref_fasta``を選択
+
 ![datalib_02](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/galaxy_datalib02.png)
+
 * 6) Upload to Library ボタンを押下
-* 7) 使用する際は上部メニュー"Shared Data"から``Data Libraries``を選択し、ファイルにチェックをつけ``Import to current history``
+
+* 7) 使用する際は上部メニュー"Shared Data"から``Data Libraries``を選択し``Import to current history``
+
 ![datalib_03](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/galaxy_datalib03.png)
 
 ## <a id='restarting-galaxy'>Restarting Galaxy
