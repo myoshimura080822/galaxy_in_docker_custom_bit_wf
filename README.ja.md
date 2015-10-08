@@ -1,6 +1,6 @@
-# Galaxy Image for RNA-Seq WF
+# Galaxy Image for Single-cell RNA-Seq WF
 
-RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナです。 
+Single-cell RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナです。 
 
 ## Base Image
 [bgruening/galaxy-stable](https://github.com/bgruening/docker-galaxy-stable)
@@ -14,6 +14,7 @@ RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナで�
 * [Installed workflow](#installed-wf)
 * [Usage](#usage)
 * [Users & Passwords](#user--passowrds)
+* [Data Libraries Setting](#datalib)
 * [Restarting Galaxy](#restarting-galaxy)
 * [Licence (MIT)](#license-mit)
 
@@ -81,7 +82,9 @@ RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナで�
  * 2) Galaxyで使用するファイルをインポートするディレクトリ (``/data/``にマウント)
 * ``/data/``にマウントするディレクトリ配下に、以下の名前のディレクトリを作成してください<<必須>>
  * adapter_primer
+  * トリミング用のfastaファイルを配置(任意)
  * transcriptome_ref_fasta
+  * マッピング用Reference fastaファイルを配置(後述)  
 
 ### 2.Sailfish, Bowtie2のIndex作成
 * 1) ホスト環境にSailfish, Bowtie2をDL
@@ -131,6 +134,21 @@ docker run -d -p 8080:80 -v /home/user/galaxy_storage/:/export/ -v /home/user/ga
 ## <a id='user--passowrds'>Users & Passwords
 * galaxy admin username ``admin@galaxy.org`` 
 * password ``admin``
+
+## <a id='datalib'>Data Libraries Setting
+* 例：``/data/transcriptome_ref_fasta``配下のfastaファイル
+* 詳細な仕様は[Galaxy Wiki Data Libraries](https://wiki.galaxyproject.org/Admin/DataLibraries/Libraries)を参照
+
+* 1) adminでログイン
+* 2) 上部メニュー"Admin"を押下しDataLibrary管理画面を表示
+![datalib_01](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/galaxy_datalib04.png)
+* 3) 画面右上``Create a new data library``ボタンで任意のディレクトリを作成
+* 4) 作成したディレクトリに移動し、画面右上``Add datasets``を押下
+* 5) ``Upload option:Upload directory of file,File Format:fasta, Server Directory:transcriptome_ref_fasta``を選択
+![datalib_02](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/galaxy_datalib02.png)
+* 6) Upload to Library ボタンを押下
+* 7) 使用する際は上部メニュー"Shared Data"から``Data Libraries``を選択し、ファイルにチェックをつけ``Import to current history``
+![datalib_03](https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf/blob/master/images/galaxy_datalib03.png)
 
 ## <a id='restarting-galaxy'>Restarting Galaxy
 * 以下のコマンドをホスト環境で実行します
