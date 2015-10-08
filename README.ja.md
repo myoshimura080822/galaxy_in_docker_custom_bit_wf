@@ -79,9 +79,9 @@ RNA-Seq用WFおよびツールが配置されたGalaxy環境のコンテナで�
 * docker run の前に、以下の2つをホストの任意の場所に作成する必要があります。
  * 1) コンテナで永続的に扱うデータをエクスポートするディレクトリ (``/export/``にマウント)
  * 2) Galaxyで使用するファイルをインポートするディレクトリ (``/data/``にマウント)
- * 3) ``/data/``にマウントするディレクトリ配下に以下を作成<<必須>>
-  * adapter_primer
-  * transcriptome_ref_fasta
+* ``/data/``にマウントするディレクトリ配下に、以下の名前のディレクトリを作成してください<<必須>>
+ * adapter_primer
+ * transcriptome_ref_fasta
 
 ### 2.Sailfish, Bowtie2のIndex作成
 * 1) ホスト環境にSailfish, Bowtie2をDL
@@ -93,19 +93,26 @@ git clone https://github.com/myoshimura080822/galaxy_in_docker_custom_bit_wf.git
 cd galaxy_in_docker_custom_bit_wf
 ```
 * 3) Ref-fasta DL
+ * すでにDLしている場合は 4) を実行してください 
 ```bash
 cd ./setup_reference_and_index/
-python setup_TranscriptomeRef_in_Galaxy.py index_file_list.txt <</data/ mount Dir配下の任意のフォルダ>>
+python setup_TranscriptomeRef_in_Galaxy.py index_file_list.txt <</data/ mount Dir path>>
 ```
- * human/Ensembl(GRCh38 cdna_all,release-82)
- * human/UCSC(hg38 refMrna,17-Jun-2015)
- * mouse/Ensembl(GRCm38 cdna_all,release-82)
- * mouse/UCSC(mm10 refMrna,15-Jun-2015)
+ * ``/data/ mount Dir`` 配下にtranscriptome_ref_fastaディレクトリが作成されます
+ * DL fasta
+  * human/Ensembl(GRCh38 cdna_all,release-82)
+  * human/UCSC(hg38 refMrna,17-Jun-2015)
+  * mouse/Ensembl(GRCm38 cdna_all,release-82)
+  * mouse/UCSC(mm10 refMrna,15-Jun-2015)
+  * ERCC (for Spike)
 
 * 4) Create Sailfish / Bowtie2 Index
 ```bash
-python create_sailfish_and_Bowtie2_index.py <</data/ mount Dir>> <<Ref-fasta DL-Dir>> <<Sailfish fullpath>> <<Bowtie2 fullpath>>
+python create_sailfish_and_Bowtie2_index.py <</data/ mount Dir path>> <<Ref-fasta DL-Dir path>> <<Sailfish fullpath>> <<Bowtie2 fullpath>>
 ```
+* ``/data/ mount Dir`` 配下にsailfish_index, bowtie2_indexディレクトリが作成されます
+* Galaxyツールの設定ファイルに記述されているパスになるため、renameはしないでください
+
 ### 3.docker run
 ```bash
 docker run -d -p 8080:80 -v /home/user/galaxy_storage/:/export/ -v /home/user/galaxy_data:/data/ myoshimura080822/galaxy_in_docker_custom_bit_wf
@@ -120,16 +127,15 @@ docker run -d -p 8080:80 -v /home/user/galaxy_storage/:/export/ -v /home/user/ga
     * ``/export/`` が空の場合、[PostgreSQL](http://www.postgresql.org/) DB, Galaxy DB, Shed Tools, Tool Dependencies やその他config scriptsを``/export/``に移動し、シンボリックリンクが作成される
     * ``/export/`` が空でない場合、中身は変更せずシンボリックリンクだけが作成される
 * ``-v /home/user/galaxy_data:/data/`` コンテナの ``/data/``に``/home/user/galaxy_data``をマウントする
-  * ``/data/adapter_primer``, ``/data/transcriptome_ref_fasta`` 配下のファイルはgalaxyのDataLibraryでの管理が可能です
 
 ## <a id='user--passowrds'>Users & Passwords
 * galaxy admin username ``admin@galaxy.org`` 
 * password ``admin``
 
 ## <a id='restarting-galaxy'>Restarting Galaxy
-* コンテナ内での再起動は使用できません (export配下のファイルが消去されます)
-* 以下のコマンドをホストで実行します
-*  ```docker exec <container name> supervisorctl restart galaxy:```
+* 以下のコマンドをホスト環境で実行します
+ *  ```docker exec <container name> supervisorctl restart galaxy:```
+**コンテナ内での再起動は使用できません (export配下のファイルが消去されます)**
 
 ## <a id="license-mit">Licence (MIT)
 Permission is hereby granted, free of charge, to any person obtaining a copy
