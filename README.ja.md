@@ -135,6 +135,7 @@ docker run -d -p 8080:80 -v /home/user/galaxy_storage/:/export/ -v /home/user/ga
 ## <a id='restarting-galaxy'>Restarting Galaxy
 * 以下のコマンドをホスト環境で実行します
  *  ```docker exec <container name> supervisorctl restart galaxy:```
+
 **コンテナ内での再起動は使用できません (export配下のファイルが消去されます)**
 
 ## <a id="license-mit">Licence (MIT)
