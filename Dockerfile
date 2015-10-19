@@ -1,5 +1,5 @@
 # Base image
-FROM myoshimura080822/galaxy_in_docker_custom
+FROM myoshimura080822/galaxy_in_docker_base:151018
 
 # Put my hand up as maintainer
 MAINTAINER Mika Yoshimura <myoshimura080822@gmail.com>
@@ -54,6 +54,12 @@ WORKDIR /galaxy-central
 COPY setup_scripts/bit-workflow_install_docker.py /galaxy/bit-workflow_install_docker.py
 COPY setup_scripts/bit-workflow_install_docker.sh /galaxy-central/bit-workflow_install_docker.sh
 RUN sh /galaxy-central/bit-workflow_install_docker.sh
+
+# for postgresql upgrade
+WORKDIR /galaxy-central
+COPY galaxy_lib/auth_conf.xml.sample /galaxy/auth_conf.xml.sample
+RUN chmod 755 /galaxy/auth_conf.xml.sample
+RUN chown galaxy:galaxy /galaxy/auth_conf.xml.sample
 
 # Mark folders as imported from the host.
 VOLUME ["/export/", "/data/", "/var/lib/docker"]
