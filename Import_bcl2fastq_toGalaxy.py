@@ -46,11 +46,11 @@ if not mount_dir.endswith('/'):
     mount_d = mount_dir + '/'
 else:
     mount_d = mount_dir
-mount_d = mount_d + "next_seq_fastqgz/"
+#mount_d = mount_d + "next_seq_fastqgz/"
 
 import_only = False
 not_report = False
-galaxy_mount_dir = "/data/next_seq_fastqgz"
+galaxy_mount_dir = "/data"
 
 if argc > 4 :
     if argvs[4] == 'T':
