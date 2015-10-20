@@ -406,7 +406,8 @@ def handle_uploaded_dataset_file( filename, datatypes_registry, ext = 'auto', is
 AUTO_DETECT_EXTENSIONS = [ 'auto' ] #should 'data' also cause auto detect?
 DECOMPRESSION_FUNCTIONS = dict( gzip = gzip.GzipFile )
 COMPRESSION_CHECK_FUNCTIONS = [ ( 'gzip', is_gzip ) ]
-COMPRESSION_DATATYPES = dict( gzip = [ 'bam', 'fastq.gz' ] )
+#COMPRESSION_DATATYPES = dict( gzip = [ 'bam' ] )
+COMPRESSION_DATATYPES = dict( gzip = [ 'bam', 'fastq.gz'] )
 COMPRESSED_EXTENSIONS = []
 for exts in COMPRESSION_DATATYPES.itervalues(): COMPRESSED_EXTENSIONS.extend( exts )
 
