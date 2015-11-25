@@ -1,0 +1,11 @@
+Poecilia_formosa_pep,http://ftp.ensembl.org/pub/release-82/fasta/poecilia_formosa/pep/Poecilia_formosa.PoeFor_5.1.2.pep.all.fa.gz
+Astyanax_mexicanus_pep,http://ftp.ensembl.org/pub/release-82/fasta/astyanax_mexicanus/pep/Astyanax_mexicanus.AstMex102.pep.all.fa.gz
+Gadus_morhua_pep,http://ftp.ensembl.org/pub/release-82/fasta/gadus_morhua/pep/Gadus_morhua.gadMor1.pep.all.fa.gz
+Takifugu_rubripes_pep,http://ftp.ensembl.org/pub/release-82/fasta/takifugu_rubripes/pep/Takifugu_rubripes.FUGU4.pep.all.fa.gz
+Oryzias_latipes_pep,http://ftp.ensembl.org/pub/release-82/fasta/oryzias_latipes/pep/Oryzias_latipes.MEDAKA1.pep.all.fa.gz
+Xiphophorus_maculatus_pep,http://ftp.ensembl.org/pub/release-82/fasta/xiphophorus_maculatus/pep/Xiphophorus_maculatus.Xipmac4.4.2.pep.all.fa.gz
+Lepisosteus_oculatus_pep,http://ftp.ensembl.org/pub/release-82/fasta/lepisosteus_oculatus/pep/Lepisosteus_oculatus.LepOcu1.pep.all.fa.gz
+Gasterosteus_aculeatus_pep,http://ftp.ensembl.org/pub/release-82/fasta/gasterosteus_aculeatus/pep/Gasterosteus_aculeatus.BROADS1.pep.all.fa.gz
+Tetraodon_nigroviridis_pep,http://ftp.ensembl.org/pub/release-82/fasta/tetraodon_nigroviridis/pep/Tetraodon_nigroviridis.TETRAODON8.pep.all.fa.gz
+Oreochromis_niloticus_pep,http://ftp.ensembl.org/pub/release-82/fasta/oreochromis_niloticus/pep/Oreochromis_niloticus.Orenil1.0.pep.all.fa.gz
+Danio_rerio_pep,http://ftp.ensembl.org/pub/release-82/fasta/danio_rerio/pep/Danio_rerio.GRCz10.pep.all.fa.gz
