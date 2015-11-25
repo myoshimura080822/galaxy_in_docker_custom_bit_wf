@@ -12,7 +12,7 @@ import sys
 import tempfile
 import urllib
 import zipfile
-impoty re
+import re
 
 from galaxy import util
 # need to import model before sniff to resolve a circular import dependency
