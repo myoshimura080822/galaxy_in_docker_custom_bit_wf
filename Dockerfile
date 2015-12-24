@@ -43,20 +43,24 @@ COPY modefied_tools/for_latest_rgFastQC.xml /shed_tools/toolshed.g2.bx.psu.edu/r
 COPY modefied_tools/edger_robust/edgeR.pl /shed_tools/toolshed.g2.bx.psu.edu/repos/fcaramia/edger/6324eefd9e91/edger/edgeR.pl
 COPY modefied_tools/edger_robust/edgeR.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/fcaramia/edger/6324eefd9e91/edger/edgeR.xml
 
-# Setting Sailfish and Bowtie2 Index
+# Setting Sailfish and Bowtie2 or Tophat Index
 COPY setup_scripts/setting_tools_index.py /galaxy/setting_tools_index.py
 COPY setup_scripts/index_file_list.txt /galaxy/index_file_list.txt
+COPY setup_scripts/index_file_list_tophat.txt /galaxy/index_file_list_tophat.txt
 RUN cp -a /galaxy-central/config/tool_data_table_conf.xml.sample /galaxy-central/config/tool_data_table_conf.xml && \
-    python /galaxy/setting_tools_index.py index_file_list.txt
+    python /galaxy/setting_tools_index.py index_file_list.txt F && \
+    python /galaxy/setting_tools_index.py index_file_list_tophat.txt T
+
+# Install ToolShed-tools
+WORKDIR /galaxy-central
+RUN install-repository "--url https://toolshed.g2.bx.psu.edu/ -o devteam --name cufflinks -r a1ea9af8d5f4 --panel-section-name NGS-tools"
 
 # Import Bit-workflow to admin-user
-WORKDIR /galaxy-central
 COPY setup_scripts/bit-workflow_install_docker.py /galaxy/bit-workflow_install_docker.py
 COPY setup_scripts/bit-workflow_install_docker.sh /galaxy-central/bit-workflow_install_docker.sh
 RUN sh /galaxy-central/bit-workflow_install_docker.sh
 
 # for postgresql upgrade
-WORKDIR /galaxy-central
 COPY galaxy_lib/auth_conf.xml.sample /galaxy/auth_conf.xml.sample
 RUN chmod 755 /galaxy/auth_conf.xml.sample
 RUN chown galaxy:galaxy /galaxy/auth_conf.xml.sample

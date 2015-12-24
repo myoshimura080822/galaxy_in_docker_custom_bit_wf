@@ -24,11 +24,11 @@ tophat_dname = '/data/tophat_index'
 loc_dname = '/galaxy-central/tool-data'
 
 if (argc != 3):
-    print 'Usage: # python %s index_list_filename tophat_flag' % argvs[0]
+    print 'Usage: # python %s index_list_filename tophat_flag(TorF)' % argvs[0]
     quit()
 
-tophat == False
-if argvs[1]=="T":
+tophat = False
+if argvs[2]=="T":
     tophat = True
 
 def read_input():
@@ -100,7 +100,7 @@ def main():
         input_index_list = read_input()
         print 'length of index_list: ' + str(len(input_index_list))
         
-        if (!tophat) :
+        if (tophat==False) :
             print ':::::::::::::::::::::::::::::::::::::::::::'
             print '>>>>>>>>>>>>>>>>> create sailfish_index.loc...'
             os.chdir(loc_dname)
