@@ -20,11 +20,16 @@ argc = len(argvs)
 
 sailfish_dname = '/data/sailfish_index'
 bowtie2_dname = '/data/bowtie2_index'
+tophat_dname = '/data/tophat_index'
 loc_dname = '/galaxy-central/tool-data'
 
-if (argc != 2):
-    print 'Usage: # python %s index_list_filename' % argvs[0]
+if (argc != 3):
+    print 'Usage: # python %s index_list_filename tophat_flag' % argvs[0]
     quit()
+
+tophat == False
+if argvs[1]=="T":
+    tophat = True
 
 def read_input():
     f = open(argvs[1])
@@ -95,36 +100,48 @@ def main():
         input_index_list = read_input()
         print 'length of index_list: ' + str(len(input_index_list))
         
-        print ':::::::::::::::::::::::::::::::::::::::::::'
-        print '>>>>>>>>>>>>>>>>> create sailfish_index.loc...'
-        os.chdir(loc_dname)
-        create_loc_file(input_index_list, "sailfish_index.loc", sailfish_dname)
+        if (!tophat) :
+            print ':::::::::::::::::::::::::::::::::::::::::::'
+            print '>>>>>>>>>>>>>>>>> create sailfish_index.loc...'
+            os.chdir(loc_dname)
+            create_loc_file(input_index_list, "sailfish_index.loc", sailfish_dname)
 
-        print ':::::::::::::::::::::::::::::::::::::::::::'
-        print '>>>>>>>>>>>>>>>>> add sailfish index-node to tool_data_table_conf.xml...'
-        os.chdir('/galaxy-central/config')
-        tree = ET.parse('tool_data_table_conf.xml')
-        add_tool_data_table_conf(tree, 'sailfish_custom_indexes', 'sailfish_index.loc')
+            print ':::::::::::::::::::::::::::::::::::::::::::'
+            print '>>>>>>>>>>>>>>>>> add sailfish index-node to tool_data_table_conf.xml...'
+            os.chdir('/galaxy-central/config')
+            tree = ET.parse('tool_data_table_conf.xml')
+            add_tool_data_table_conf(tree, 'sailfish_custom_indexes', 'sailfish_index.loc')
 
-        print ':::::::::::::::::::::::::::::::::::::::::::'
-        print '>>>>>>>>>>>>>>>>> create bowtie2_indices.loc...'
-        os.chdir(loc_dname)
-        create_loc_file(input_index_list, "bowtie2_indices.loc", bowtie2_dname)
+            print ':::::::::::::::::::::::::::::::::::::::::::'
+            print '>>>>>>>>>>>>>>>>> create bowtie2_indices.loc...'
+            os.chdir(loc_dname)
+            create_loc_file(input_index_list, "bowtie2_indices.loc", bowtie2_dname)
 
-        print ':::::::::::::::::::::::::::::::::::::::::::'
-        print '>>>>>>>>>>>>>>>>> add bowtie2 index-node to tool_data_table_conf.xml...'
-        os.chdir('/galaxy-central/config')
-        tree = ET.parse('tool_data_table_conf.xml')
+            print ':::::::::::::::::::::::::::::::::::::::::::'
+            print '>>>>>>>>>>>>>>>>> add bowtie2 index-node to tool_data_table_conf.xml...'
+            os.chdir('/galaxy-central/config')
+            tree = ET.parse('tool_data_table_conf.xml')
 
-        bowtie2_node = 0
-        for e in tree.getiterator():
-            if e.get('name') == 'bowtie2_indexes':
-                bowtie2_node = 1
+            bowtie2_node = 0
+            for e in tree.getiterator():
+                if e.get('name') == 'bowtie2_indexes':
+                    bowtie2_node = 1
 
-        if bowtie2_node == 0:
-            add_tool_data_table_conf(tree, 'bowtie2_indexes', 'bowtie2_indices.loc')
-        else:
-            print 'bowtie2 index-node already created.'
+            if bowtie2_node == 0:
+                add_tool_data_table_conf(tree, 'bowtie2_indexes', 'bowtie2_indices.loc')
+            else:
+                print 'bowtie2 index-node already created.'
+        else :
+            print ':::::::::::::::::::::::::::::::::::::::::::'
+            print '>>>>>>>>>>>>>>>>> create tophat_indices.loc...'
+            os.chdir(loc_dname)
+            create_loc_file(input_index_list, "tophat_indices.loc", tophat_dname)
+
+            print ':::::::::::::::::::::::::::::::::::::::::::'
+            print '>>>>>>>>>>>>>>>>> add tophat index-node to tool_data_table_conf.xml...'
+            os.chdir('/galaxy-central/config')
+            tree = ET.parse('tool_data_table_conf.xml')
+            add_tool_data_table_conf(tree, 'tophat2_indexes', 'tophat_indices.loc')
 
         print ':::::::::::::::::::::::::::::::::::::::::::'
         print '>>>>>>>>>>>>>>>>> script ended :)'
