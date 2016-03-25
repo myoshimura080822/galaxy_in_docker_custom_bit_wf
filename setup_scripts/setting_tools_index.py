@@ -19,6 +19,7 @@ argvs = sys.argv
 argc = len(argvs)
 
 sailfish_dname = '/data/sailfish_index'
+sailfish_0_9_dname = '/data/sailfish_0.9_index'
 bowtie2_dname = '/data/bowtie2_index'
 tophat_dname = '/data/tophat_index'
 loc_dname = '/galaxy-central/tool-data'
@@ -106,18 +107,26 @@ def main():
             os.chdir(loc_dname)
             create_loc_file(input_index_list, "sailfish_index.loc", sailfish_dname)
 
-            print ':::::::::::::::::::::::::::::::::::::::::::'
             print '>>>>>>>>>>>>>>>>> add sailfish index-node to tool_data_table_conf.xml...'
             os.chdir('/galaxy-central/config')
             tree = ET.parse('tool_data_table_conf.xml')
             add_tool_data_table_conf(tree, 'sailfish_custom_indexes', 'sailfish_index.loc')
+            
+            print ':::::::::::::::::::::::::::::::::::::::::::'
+            print '>>>>>>>>>>>>>>>>> create sailfish_0.9_index.loc...'
+            os.chdir(loc_dname)
+            create_loc_file(input_index_list, "sailfish_0.9_index.loc", sailfish_0_9_dname)
+
+            print '>>>>>>>>>>>>>>>>> add sailfish_0.9 index-node to tool_data_table_conf.xml...'
+            os.chdir('/galaxy-central/config')
+            tree = ET.parse('tool_data_table_conf.xml')
+            add_tool_data_table_conf(tree, 'sailfish_0.9_indexes', 'sailfish_0.9_index.loc')
 
             print ':::::::::::::::::::::::::::::::::::::::::::'
             print '>>>>>>>>>>>>>>>>> create bowtie2_indices.loc...'
             os.chdir(loc_dname)
             create_loc_file(input_index_list, "bowtie2_indices.loc", bowtie2_dname)
 
-            print ':::::::::::::::::::::::::::::::::::::::::::'
             print '>>>>>>>>>>>>>>>>> add bowtie2 index-node to tool_data_table_conf.xml...'
             os.chdir('/galaxy-central/config')
             tree = ET.parse('tool_data_table_conf.xml')
@@ -137,7 +146,6 @@ def main():
             os.chdir(loc_dname)
             create_loc_file(input_index_list, "tophat_indices.loc", tophat_dname)
 
-            print ':::::::::::::::::::::::::::::::::::::::::::'
             print '>>>>>>>>>>>>>>>>> add tophat index-node to tool_data_table_conf.xml...'
             os.chdir('/galaxy-central/config')
             tree = ET.parse('tool_data_table_conf.xml')

@@ -1,5 +1,5 @@
 # Base image
-FROM myoshimura080822/galaxy_in_docker_base:151018
+FROM myoshimura080822/galaxy_in_docker_base:160325
 
 # Put my hand up as maintainer
 MAINTAINER Mika Yoshimura <myoshimura080822@gmail.com>
@@ -32,7 +32,7 @@ RUN mkdir /galaxy-central/config/import_data && \
     cd /galaxy-central/config/import_data;ln -s /data/transcriptome_ref_fasta;ln -s /data/adapter_primer
 
 # Install Custom Bit-Tools
-WORKDIR /galaxy
+#WORKDIR /galaxy
 COPY setup_scripts/bit-tools_install_docker.py /galaxy/bit-tools_install_docker.py
 RUN python /galaxy/bit-tools_install_docker.py && \
     cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml
@@ -48,12 +48,8 @@ COPY setup_scripts/setting_tools_index.py /galaxy/setting_tools_index.py
 COPY setup_scripts/index_file_list.txt /galaxy/index_file_list.txt
 COPY setup_scripts/index_file_list_tophat.txt /galaxy/index_file_list_tophat.txt
 RUN cp -a /galaxy-central/config/tool_data_table_conf.xml.sample /galaxy-central/config/tool_data_table_conf.xml && \
-    python /galaxy/setting_tools_index.py index_file_list.txt F && \
-    python /galaxy/setting_tools_index.py index_file_list_tophat.txt T
-
-# Install ToolShed-tools
-WORKDIR /galaxy-central
-RUN install-repository "--url https://toolshed.g2.bx.psu.edu/ -o devteam --name cufflinks -r a1ea9af8d5f4 --panel-section-name NGS-tools"
+    python /galaxy/setting_tools_index.py /galaxy/index_file_list.txt F && \
+    python /galaxy/setting_tools_index.py /galaxy/index_file_list_tophat.txt T
 
 # Import Bit-workflow to admin-user
 COPY setup_scripts/bit-workflow_install_docker.py /galaxy/bit-workflow_install_docker.py
