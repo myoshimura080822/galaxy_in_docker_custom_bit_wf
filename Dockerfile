@@ -1,5 +1,5 @@
 # Base image
-FROM myoshimura080822/galaxy_in_docker_base:160328
+FROM myoshimura080822/galaxy_in_docker_base:160404
 
 # Put my hand up as maintainer
 MAINTAINER Mika Yoshimura <myoshimura080822@gmail.com>
@@ -28,19 +28,18 @@ RUN cp /galaxy/galaxy_lib/galaxy.ini.docker_sample /galaxy-central/config/galaxy
     cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml && \
 # replace migrate ToolSheds tools
     mv /galaxy/modefied_tools/for_latest_fastq-mcf.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/jjohnson/fastq_mcf/b61f1466ce8f/fastq_mcf/fastq-mcf.xml && \
-    mv /galaxy/modefied_tools/for_latest_rgFastQC.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/devteam/fastqc/2d094334f61e/fastqc/rgFastQC.xml && \
+    mv /galaxy/modefied_tools/for_latest_rgFastQC.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/devteam/fastqc/28d39af2dd06/fastqc/rgFastQC.xml && \
     cp /galaxy/modefied_tools/edger_robust/edgeR.* /shed_tools/toolshed.g2.bx.psu.edu/repos/fcaramia/edger/6324eefd9e91/edger/ && \
-# Setting Sailfish and Bowtie2 or Tophat Index
+# Setting Index
     cp /galaxy/setup_scripts/setting_tools_index.py /galaxy/ && \
-    cp /galaxy/setup_scripts/index_file_list.txt /galaxy/ && \
+    cp /galaxy/setup_scripts/index_file_mrna.txt /galaxy/ && \
     cp /galaxy/setup_scripts/index_file_list_tophat.txt /galaxy/ && \
+    cp /galaxy/setup_scripts/index_file_list_hisat2.txt /galaxy/ && \
     cp -a /galaxy-central/config/tool_data_table_conf.xml.sample /galaxy-central/config/tool_data_table_conf.xml && \
-    python /galaxy/setting_tools_index.py /galaxy/index_file_list.txt F && \
-    python /galaxy/setting_tools_index.py /galaxy/index_file_list_tophat.txt T && \
+    python /galaxy/setting_tools_index.py /galaxy/index_file_mrna.txt /galaxy/index_file_list_tophat.txt /galaxy/index_file_list_hisat2.txt && \
 # Import Bit-workflow to admin-user 
     cp /galaxy/setup_scripts/bit-workflow_install_docker.py /galaxy/bit-workflow_install_docker.py && \
     cp /galaxy/setup_scripts/bit-workflow_install_docker.sh /galaxy-central/bit-workflow_install_docker.sh && \
-    #sh /galaxy-central/bit-workflow_install_docker.sh && \
 # for postgresql upgrade
     cp /galaxy/galaxy_lib/auth_conf.xml.sample /galaxy/ && \
     chmod 755 /galaxy/auth_conf.xml.sample && \

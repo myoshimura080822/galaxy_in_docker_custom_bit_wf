@@ -1,4 +1,5 @@
 import sys, traceback
+import time
 import os
 from git import Repo
 from ConfigParser import SafeConfigParser
@@ -69,7 +70,10 @@ def main():
         print id_list
         [wClient.delete_workflow(x) for x in id_list]
         print wClient.get_workflows()
-        [wClient.import_workflow_from_local_path(file) for file in get_all_ga(mytoolsdir)]
+        
+        wf_file_path =  get_all_ga(mytoolsdir)
+        [wClient.import_workflow_from_local_path(file) for file in wf_file_path]
+
         print wClient.get_workflows()
 
         print ':::::::::::::::::::::::::::::::::::::::::::'

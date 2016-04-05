@@ -1,1 +1,5 @@
-mm10,mouse_UCSC_mm10
+GRCh38,Homo_sapiens_NCBI_GRCh38
+hg19,Homo_sapiens_UCSC_hg19
+GRCm38,Mus_musculus_NCBI_GRCm38
+mm10,Mus_musculus_UCSC_mm10
+Xla_v91,Xenopus_laevis_v9.1

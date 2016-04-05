@@ -88,6 +88,7 @@ def create_datalib(dname, dist=""):
     return new_lib_id
 
 def get_import_files(dir_name):
+    file_list = []
     for root, dirs, files in os.walk(dir_name):
         if "Reports" in dirs and "Stats" in dirs:
             file_list = '\n'.join( [ os.path.join(root, filename) for filename in files if ".gz" == os.path.splitext(filename)[1]] )

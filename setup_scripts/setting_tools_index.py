@@ -22,18 +22,15 @@ sailfish_dname = '/data/sailfish_index'
 sailfish_0_9_dname = '/data/sailfish_0.9_index'
 bowtie2_dname = '/data/bowtie2_index'
 tophat_dname = '/data/tophat_index'
+hisat2_dname = '/data/hisat2_index'
 loc_dname = '/galaxy-central/tool-data'
 
-if (argc != 3):
-    print 'Usage: # python %s index_list_filename tophat_flag(TorF)' % argvs[0]
+if (argc != 4):
+    print 'Usage: # python %s index_list_mrna index_list_tophat2 index_list_hisat2' % argvs[0]
     quit()
 
-tophat = False
-if argvs[2]=="T":
-    tophat = True
-
-def read_input():
-    f = open(argvs[1])
+def read_input(args):
+    f = open(argvs[args])
     ret_list = []
 
     for i in f.readlines():
@@ -51,7 +48,7 @@ def create_loc_file(index_list, loc_name, dirname):
         index_id = item.split(',')[0]
         index_name = item.split(',')[1]
         
-        if "sailfish" in dirname:
+        if "sailfish" in dirname or "hisat2" in dirname:
             index_dir = dirname + '/' + index_id
         else:
             index_dir = dirname + '/' + index_id + '/' + index_id
@@ -59,27 +56,6 @@ def create_loc_file(index_list, loc_name, dirname):
         str_loc = '%s : %s : %s : %s' % (index_id,index_id,index_name,index_dir)    
         print str_loc
         f.write('%s\t%s\t%s\t%s\n' % (index_id,index_id,index_name,index_dir))
-    f.close()
-
-def get_bowtie2index_dir(path):
-    dir_list = []
-    for (root, dirs, files) in os.walk(path):
-        for dir in dirs:
-            dir_list.append( os.path.join(root,dir).replace("\\", "/") )
-    
-    dir_chk = filter(lambda x:x.find("Bowtie2Index") > -1, dir_list)
-    return dir_chk[0] if len(dir_chk) > 0 else ""
-
-def create_bowtie2_loc_file(index_list, dirname):
-    f = codecs.open("bowtie2_indices.loc", "w", "utf-8")
-    for item in index_list:
-        if len(dir_name) > 0:
-            item_info = filter(lambda x:x.find(dir_name.split('/')[-6]) > -1, index_list)[0]
-            index_id = item_info.split('_')[0]
-	    index_name = 'Mouse(' + index_id + ')'
-            str_loc = '%s : %s : %s : %s' % (index_id,index_id,index_name,dir_name + '/genome')
-            print str_loc
-            f.write('%s\t%s\t%s\t%s\n' % (index_id,index_id,index_name,dir_name + '/genome'))
     f.close()
 
 def add_tool_data_table_conf(tree, name, locname):
@@ -98,58 +74,71 @@ def add_tool_data_table_conf(tree, name, locname):
 def main():
     try:
         input_index_list = []
-        input_index_list = read_input()
+        input_index_list = read_input(1)
         print 'length of index_list: ' + str(len(input_index_list))
         
-        if (tophat==False) :
-            print ':::::::::::::::::::::::::::::::::::::::::::'
-            print '>>>>>>>>>>>>>>>>> create sailfish_index.loc...'
-            os.chdir(loc_dname)
-            create_loc_file(input_index_list, "sailfish_index.loc", sailfish_dname)
+        print ':::::::::::::::::::::::::::::::::::::::::::'
+        print '>>>>>>>>>>>>>>>>> create sailfish_index.loc...'
+        os.chdir(loc_dname)
+        create_loc_file(input_index_list, "sailfish_index.loc", sailfish_dname)
 
-            print '>>>>>>>>>>>>>>>>> add sailfish index-node to tool_data_table_conf.xml...'
-            os.chdir('/galaxy-central/config')
-            tree = ET.parse('tool_data_table_conf.xml')
-            add_tool_data_table_conf(tree, 'sailfish_custom_indexes', 'sailfish_index.loc')
+        print '>>>>>>>>>>>>>>>>> add sailfish index-node to tool_data_table_conf.xml...'
+        os.chdir('/galaxy-central/config')
+        tree = ET.parse('tool_data_table_conf.xml')
+        add_tool_data_table_conf(tree, 'sailfish_custom_indexes', 'sailfish_index.loc')
             
-            print ':::::::::::::::::::::::::::::::::::::::::::'
-            print '>>>>>>>>>>>>>>>>> create sailfish_0.9_index.loc...'
-            os.chdir(loc_dname)
-            create_loc_file(input_index_list, "sailfish_0.9_index.loc", sailfish_0_9_dname)
+        print ':::::::::::::::::::::::::::::::::::::::::::'
+        print '>>>>>>>>>>>>>>>>> create sailfish_0.9_index.loc...'
+        os.chdir(loc_dname)
+        create_loc_file(input_index_list, "sailfish_0.9_index.loc", sailfish_0_9_dname)
 
-            print '>>>>>>>>>>>>>>>>> add sailfish_0.9 index-node to tool_data_table_conf.xml...'
-            os.chdir('/galaxy-central/config')
-            tree = ET.parse('tool_data_table_conf.xml')
-            add_tool_data_table_conf(tree, 'sailfish_0.9_indexes', 'sailfish_0.9_index.loc')
+        print '>>>>>>>>>>>>>>>>> add sailfish_0.9 index-node to tool_data_table_conf.xml...'
+        os.chdir('/galaxy-central/config')
+        tree = ET.parse('tool_data_table_conf.xml')
+        add_tool_data_table_conf(tree, 'sailfish_0.9_indexes', 'sailfish_0.9_index.loc')
 
-            print ':::::::::::::::::::::::::::::::::::::::::::'
-            print '>>>>>>>>>>>>>>>>> create bowtie2_indices.loc...'
-            os.chdir(loc_dname)
-            create_loc_file(input_index_list, "bowtie2_indices.loc", bowtie2_dname)
+        print ':::::::::::::::::::::::::::::::::::::::::::'
+        print '>>>>>>>>>>>>>>>>> create bowtie2_indices.loc...'
+        os.chdir(loc_dname)
+        create_loc_file(input_index_list, "bowtie2_indices.loc", bowtie2_dname)
 
-            print '>>>>>>>>>>>>>>>>> add bowtie2 index-node to tool_data_table_conf.xml...'
-            os.chdir('/galaxy-central/config')
-            tree = ET.parse('tool_data_table_conf.xml')
+        print '>>>>>>>>>>>>>>>>> add bowtie2 index-node to tool_data_table_conf.xml...'
+        os.chdir('/galaxy-central/config')
+        tree = ET.parse('tool_data_table_conf.xml')
 
-            bowtie2_node = 0
-            for e in tree.getiterator():
-                if e.get('name') == 'bowtie2_indexes':
-                    bowtie2_node = 1
+        bowtie2_node = 0
+        for e in tree.getiterator():
+            if e.get('name') == 'bowtie2_indexes':
+                bowtie2_node = 1
 
-            if bowtie2_node == 0:
-                add_tool_data_table_conf(tree, 'bowtie2_indexes', 'bowtie2_indices.loc')
-            else:
-                print 'bowtie2 index-node already created.'
-        else :
-            print ':::::::::::::::::::::::::::::::::::::::::::'
-            print '>>>>>>>>>>>>>>>>> create tophat_indices.loc...'
-            os.chdir(loc_dname)
-            create_loc_file(input_index_list, "tophat_indices.loc", tophat_dname)
+        if bowtie2_node == 0:
+            add_tool_data_table_conf(tree, 'bowtie2_indexes', 'bowtie2_indices.loc')
+        else:
+            print 'bowtie2 index-node already created.'
+        
+        input_index_list = read_input(2)
+        
+        print ':::::::::::::::::::::::::::::::::::::::::::'
+        print '>>>>>>>>>>>>>>>>> create tophat_indices.loc...'
+        os.chdir(loc_dname)
+        create_loc_file(input_index_list, "tophat_indices.loc", tophat_dname)
 
-            print '>>>>>>>>>>>>>>>>> add tophat index-node to tool_data_table_conf.xml...'
-            os.chdir('/galaxy-central/config')
-            tree = ET.parse('tool_data_table_conf.xml')
-            add_tool_data_table_conf(tree, 'tophat2_indexes', 'tophat_indices.loc')
+        print '>>>>>>>>>>>>>>>>> add tophat index-node to tool_data_table_conf.xml...'
+        os.chdir('/galaxy-central/config')
+        tree = ET.parse('tool_data_table_conf.xml')
+        add_tool_data_table_conf(tree, 'tophat2_indexes', 'tophat_indices.loc')
+        
+        input_index_list = read_input(3)
+        
+        print ':::::::::::::::::::::::::::::::::::::::::::'
+        print '>>>>>>>>>>>>>>>>> create hisat2_index.loc...'
+        os.chdir(loc_dname)
+        create_loc_file(input_index_list, "hisat2_index.loc", hisat2_dname)
+
+        print '>>>>>>>>>>>>>>>>> add hisat2 index-node to tool_data_table_conf.xml...'
+        os.chdir('/galaxy-central/config')
+        tree = ET.parse('tool_data_table_conf.xml')
+        add_tool_data_table_conf(tree, 'hisat2_indexes', 'hisat2_index.loc')
 
         print ':::::::::::::::::::::::::::::::::::::::::::'
         print '>>>>>>>>>>>>>>>>> script ended :)'
