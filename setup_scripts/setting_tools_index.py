@@ -48,7 +48,7 @@ def create_loc_file(index_list, loc_name, dirname):
         index_id = item.split(',')[0]
         index_name = item.split(',')[1]
         
-        if "sailfish" in dirname or "hisat2" in dirname:
+        if "sailfish" in dirname:
             index_dir = dirname + '/' + index_id
         else:
             index_dir = dirname + '/' + index_id + '/' + index_id
