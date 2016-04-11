@@ -22,7 +22,7 @@ RUN cp /galaxy/galaxy_lib/galaxy.ini.docker_sample /galaxy-central/config/galaxy
     cp /galaxy/galaxy_lib/upload.py /galaxy-central/tools/data_source/ && \
 # Make import_data dir
     mkdir /galaxy-central/config/import_data && \
-    cd /galaxy-central/config/import_data;ln -s /data/transcriptome_ref_fasta;ln -s /data/adapter_primer;ln -s /data/Homo_Sapiens_genome;ln -s /data/Mus_musculus_genome && \
+    cd /galaxy-central/config/import_data;ln -s /data/transcriptome_ref_fasta;ln -s /data/adapter_primer;ln -s /data/Homo_sapiens_genome;ln -s /data/Mus_musculus_genome && \
 # Install Custom Bit-Tools
     python /galaxy/setup_scripts/bit-tools_install_docker.py && \
     cp -a /galaxy-central/config/tool_conf.xml.main /galaxy-central/config/tool_conf.xml && \

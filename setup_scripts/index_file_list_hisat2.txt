@@ -1,7 +1,4 @@
-GRCh37,Homo_sapiens_Ensembl_GRCh37
-GRCh38,Homo_sapiens_Ensembl_GRCh38
 hg38,Homo_sapiens_UCSC_hg38
 hg19,Homo_sapiens_UCSC_hg19
-GRCm38,Mus_musculus_Ensembl_GRCm38
 mm10,Mus_musculus_UCSC_mm10
 Xla_v91,Xenopus_laevis_v9.1
