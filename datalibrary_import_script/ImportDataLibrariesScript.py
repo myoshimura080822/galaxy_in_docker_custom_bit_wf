@@ -141,9 +141,15 @@ def merge_pair_fastq(list, outdir):
     return '\n'.join(ret_list)
 
 def get_import_files(dir_name):
+    file_list = []
     for root, dirs, files in os.walk(dir_name):
-        file_list = '\n'.join( [ os.path.join(root, filename) for filename in files if '.' + file_ext == os.path.splitext(filename)[1]] )
-    return file_list
+        filename = '\n'.join([os.path.join(root, filename) for filename in files if '.' + file_ext == os.path.splitext(filename)[1]])
+        #print filename
+        file_list.append(filename)
+    
+    #print file_list
+    
+    return '\n'.join(file_list)
 
 class ScriptRunningError(Exception):
     pass

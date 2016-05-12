@@ -43,7 +43,9 @@ RUN cp /galaxy/galaxy_lib/galaxy.ini.docker_sample /galaxy-central/config/galaxy
 # for postgresql upgrade
     cp /galaxy/galaxy_lib/auth_conf.xml.sample /galaxy/ && \
     chmod 755 /galaxy/auth_conf.xml.sample && \
-    chown galaxy. /galaxy/auth_conf.xml.sample
+    chown galaxy. /galaxy/auth_conf.xml.sample && \
+# modefied galaxy.conf
+    sed -i -e "s/\= \/usr\/bin\/docker -d/\= \/usr\/bin\/docker -d -s vfs/g" /etc/supervisor/conf.d/galaxy.conf
 
 RUN sh /galaxy-central/bit-workflow_install_docker.sh
 

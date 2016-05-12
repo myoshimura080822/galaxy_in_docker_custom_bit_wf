@@ -35,3 +35,4 @@ fi
 sudo -E -u galaxy ./run.sh --stop-daemon --log-file=$install_log --pid-file=galaxy_install.pid
 rm $install_log
 service postgresql stop
+
