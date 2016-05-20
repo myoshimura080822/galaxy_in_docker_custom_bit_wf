@@ -1,5 +1,5 @@
 # Base image
-FROM myoshimura080822/galaxy_in_docker_base:160408
+FROM myoshimura080822/galaxy_in_docker_base:160520
 
 # Put my hand up as maintainer
 MAINTAINER Mika Yoshimura <myoshimura080822@gmail.com>
