@@ -1,9 +1,11 @@
 # galaxy_in_docker_custom_bit_wf
 
 This extension add NGS analysis tools for Dockerfiles in the bgruening/docker-galaxy-stable images from Björn A. Grüning.
+
 https://github.com/bgruening/docker-galaxy-stable
 
 base image
+
 https://github.com/myoshimura080822/galaxy_in_docker_custom
 
 # History(Tag)
