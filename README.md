@@ -9,6 +9,8 @@ base image
 https://github.com/myoshimura080822/galaxy_in_docker_custom
 
 # History(Tag)
+- myoshimura080822/galaxy_in_docker_bitwf:160607
+  - modified wrong path of sailfish-0.9.2 wrapper tool 
 - myoshimura080822/galaxy_in_docker_bitwf:160520
   - add new workflow for wig convert to bigwig format
     - genome_RNA-seq_BAM_to_BigWig.ga 
