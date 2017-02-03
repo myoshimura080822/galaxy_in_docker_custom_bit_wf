@@ -93,7 +93,7 @@ def create_pair_path(root_dir):
         #print dirname
         #print files
         if len(files) > 0:
-            file_list = [os.path.join(root, filename) for filename in files if 'fastq.gz' in filename and 'R2' in filename]
+            file_list = [os.path.join(root, filename) for filename in files if 'fastq.gz' in filename and 'L001' in filename]
             if len(file_list) > 0:
                 path_list[os.path.basename(dirname)] = file_list[0]
     
@@ -102,10 +102,10 @@ def create_pair_path(root_dir):
         return ""
 
     keys_list = path_list.keys()
-    #print keys_list
+    print keys_list
     lane_01 = list(path_list[keys_list[0]])
     lane_01.sort()
-    #print lane_01
+    print lane_01
     print len(lane_01)
     lane_02 = list(path_list[keys_list[1]])
     lane_02.sort()

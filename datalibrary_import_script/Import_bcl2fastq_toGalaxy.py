@@ -28,8 +28,8 @@ print u"Import_bal2fastq_toGalaxy.py Started......"
 argvs = sys.argv
 argc = len(argvs)
 
-if argc < 4 or argc == 5:
-    print 'Usage: # python %s runfolder-dir docker-mount-dir port-no import_only=F not_report=F ' % argvs[0]
+if argc < 5 or argc == 6:
+    print 'Usage: # python %s runfolder-dir docker-mount-dir port-no hostname import_only=F not_report=F ' % argvs[0]
     quit()
 
 run_dir = argvs[1]
@@ -52,20 +52,21 @@ import_only = False
 not_report = False
 galaxy_mount_dir = "/data"
 
-if argc > 4 :
-    if argvs[4] == 'T':
+if argc > 5 :
+    if argvs[5] == 'T':
         import_only = True
         galaxy_mount_dir = "/data"
         mount_d = mount_d.replace("next_seq_fastqgz/", "")
-    if argvs[5] == 'T':
+    if argvs[6] == 'T':
         not_report = True
 
-hostname = os.uname()[1]
+hostname = argvs[4]
 
-print "whoami : " + pwd.getpwuid(os.getuid())[0]
-print "current_dir : " + os.getcwd()
+#print "whoami : " + pwd.getpwuid(os.getuid())[0]
+#print "current_dir : " + os.getcwd()
 
-url = "http://" + hostname + ":" + port_no
+#url = "http://" + hostname + ":" + port_no
+url = "http://" + hostname
 admin_email = os.environ.get('GALAXY_DEFAULT_ADMIN_USER', 'admin@galaxy.org')
 admin_pass = os.environ.get('GALAXY_DEFAULT_ADMIN_PASSWORD', 'admin')
 gi = galaxy.GalaxyInstance(url=url, email=admin_email, password=admin_pass)
