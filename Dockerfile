@@ -29,6 +29,8 @@ RUN cp /galaxy/galaxy_lib/galaxy.ini.docker_sample /galaxy-central/config/galaxy
 # replace migrate ToolSheds tools
     mv /galaxy/modefied_tools/for_latest_fastq-mcf.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/jjohnson/fastq_mcf/b61f1466ce8f/fastq_mcf/fastq-mcf.xml && \
     mv /galaxy/modefied_tools/for_latest_rgFastQC.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/devteam/fastqc/28d39af2dd06/fastqc/rgFastQC.xml && \
+    mv /galaxy/modefied_tools/read_distribution.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/nilesh/rseqc/f242ee103277/rseqc/read_distribution.xml && \
+    mv /galaxy/modefied_tools/geneBody_coverage.xml /shed_tools/toolshed.g2.bx.psu.edu/repos/nilesh/rseqc/f242ee103277/rseqc/geneBody_coverage.xml && \
     cp /galaxy/modefied_tools/edger_robust/edgeR.* /shed_tools/toolshed.g2.bx.psu.edu/repos/fcaramia/edger/6324eefd9e91/edger/ && \
 # Setting Index
     cp /galaxy/setup_scripts/setting_tools_index.py /galaxy/ && \
