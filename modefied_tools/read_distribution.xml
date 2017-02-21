@@ -6,7 +6,7 @@
     </macros>
 
     <requirements>
-        <!--<expand macro="requirement_package_numpy" />-->
+        <!-- <expand macro="requirement_package_numpy" /> -->
         <expand macro="requirement_package_rseqc" />
     </requirements>
 
